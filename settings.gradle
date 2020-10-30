@@ -1,0 +1,6 @@
+rootProject.name = 'im-practice'
+include 'im-server'
+include 'im-client'
+include 'im-router'
+include 'im-netty'
+
