@@ -1,0 +1,10 @@
+server:
+  port: 8010
+spring:
+  application:
+    name: im-netty
+  cloud:
+    zookeeper:
+      connect-string: 10.168.1.2:2181
+      discovery:
+        instance-host: 10.168.1.193

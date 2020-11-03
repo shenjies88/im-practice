@@ -1,0 +1,10 @@
+server:
+  port: 8090
+spring:
+  application:
+    name: im-router
+  cloud:
+    zookeeper:
+      connect-string: 10.168.1.2:2181
+      discovery:
+        register: false
