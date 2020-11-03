@@ -6,12 +6,15 @@ spring:
   cloud:
     zookeeper:
       dependency:
+        # 不开启resttemplate
         resttemplate:
           enabled: false
       connect-string: 10.168.1.2:2181
+      # 不注册自身
       discovery:
         register: false
       dependencies:
+        # 添加依赖，以监听依赖的上下线
         im-netty:
           loadBalancerType: ROUND_ROBIN
           required: false
