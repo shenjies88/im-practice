@@ -6,12 +6,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,19 +27,7 @@ public class RouterController {
 
     @ApiOperation("服务列表")
     @GetMapping("/list")
-    public List<List<ServiceInstance>> serviceUrl() {
-        List<String> services = client.getServices();
-        List<List<ServiceInstance>> result = new ArrayList<>();
-        services.forEach(id -> {
-            try {
-                List<ServiceInstance> instances = client.getInstances(id);
-                if (!CollectionUtils.isEmpty(instances)) {
-                    result.add(instances);
-                }
-            } catch (Exception e) {
-
-            }
-        });
-        return result;
+    public List<ServiceInstance> serviceUrl() {
+        return client.getInstances("im-netty");
     }
 }

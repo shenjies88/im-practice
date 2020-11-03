@@ -1,4 +1,4 @@
-package com.shenjies88.im.router;
+package com.shenjies88.im.router.listener;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.zookeeper.discovery.watcher.DependencyState;
