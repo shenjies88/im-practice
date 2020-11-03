@@ -5,6 +5,13 @@ spring:
     name: im-router
   cloud:
     zookeeper:
+      dependency:
+        resttemplate:
+          enabled: false
       connect-string: 10.168.1.2:2181
       discovery:
         register: false
+      dependencies:
+        im-netty:
+          loadBalancerType: ROUND_ROBIN
+          required: false
