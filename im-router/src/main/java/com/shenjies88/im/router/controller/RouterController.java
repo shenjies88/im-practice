@@ -1,33 +1,33 @@
 package com.shenjies88.im.router.controller;
 
+import com.shenjies88.im.common.vo.HttpResult;
+import com.shenjies88.im.router.service.RouterService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
-import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 /**
  * @author shenjies88
  * @since 2020/11/03/14:25
  */
 @Slf4j
+@AllArgsConstructor(onConstructor_ = {@Autowired})
 @Api(tags = "路由接口")
 @RequestMapping("/router")
 @RestController
 public class RouterController {
 
-    @Autowired
-    private DiscoveryClient client;
+    private final RouterService routerService;
 
-    @ApiOperation("服务列表")
-    @GetMapping("/list")
-    public List<ServiceInstance> serviceUrl() {
-        return client.getInstances("im-netty");
+    @ApiOperation("获取服务")
+    @GetMapping
+    public HttpResult<ServiceInstance> serviceInstance() {
+        return HttpResult.success(routerService.serviceInstance());
     }
 }

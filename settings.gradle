@@ -3,4 +3,5 @@ include 'im-server'
 include 'im-client'
 include 'im-router'
 include 'im-netty'
+include 'im-common'
 

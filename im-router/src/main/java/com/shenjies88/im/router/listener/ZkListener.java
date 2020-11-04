@@ -1,6 +1,10 @@
 package com.shenjies88.im.router.listener;
 
+import com.shenjies88.im.router.constant.MyConstant;
+import com.shenjies88.im.router.hold.MyServerHold;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.zookeeper.discovery.watcher.DependencyState;
 import org.springframework.cloud.zookeeper.discovery.watcher.DependencyWatcherListener;
 import org.springframework.stereotype.Component;
@@ -13,8 +17,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class ZkListener implements DependencyWatcherListener {
 
+    @Autowired
+    private DiscoveryClient client;
+
     @Override
     public void stateChanged(String dependencyName, DependencyState newState) {
-        log.warn(" {} {}", dependencyName, newState);
+        MyServerHold.serverList = client.getInstances(MyConstant.NETTY_SERVER_ID);
+        MyServerHold.currIndex = (MyServerHold.currIndex + 1) % MyServerHold.serverList.size();
     }
 }

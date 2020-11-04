@@ -16,4 +16,3 @@ spring:
       dependencies:
         # 添加依赖，以监听依赖的上下线
         im-netty:
-          required: false
