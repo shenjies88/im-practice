@@ -16,3 +16,9 @@ spring:
       dependencies:
         # 添加依赖，以监听依赖的上下线
         im-netty:
+logging:
+  level:
+    root: info
+    com.shenjies88.im: debug
+  pattern:
+    console: "%d %clr(%-5p) %clr(${PID:-}){magenta} --- [%t] %clr(%c{10}.%M){cyan} \\(%file:%line\\) %m%n"

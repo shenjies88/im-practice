@@ -23,6 +23,5 @@ public class ZkListener implements DependencyWatcherListener {
     @Override
     public void stateChanged(String dependencyName, DependencyState newState) {
         MyServerHold.serverList = client.getInstances(MyConstant.NETTY_SERVER_ID);
-        MyServerHold.currIndex = (MyServerHold.currIndex + 1) % MyServerHold.serverList.size();
     }
 }
