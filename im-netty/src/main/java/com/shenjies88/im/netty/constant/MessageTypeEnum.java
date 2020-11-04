@@ -1,5 +1,6 @@
 package com.shenjies88.im.netty.constant;
 
+
 /**
  * @author shenjies88
  * @since 2020/11/04/15:41
@@ -27,7 +28,12 @@ public enum MessageTypeEnum {
     GROUP_CHAT,
 
     /**
-     * 错误
+     * 错误响应
      */
-    ERROR
+    ERROR,
+
+    /**
+     * 成功响应
+     */
+    SUCCESSFUL
 }

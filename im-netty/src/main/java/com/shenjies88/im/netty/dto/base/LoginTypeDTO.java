@@ -3,17 +3,17 @@ package com.shenjies88.im.netty.dto.base;
 import lombok.Data;
 
 /**
- * 私聊
+ * 登录
  *
  * @author shenjies88
  * @since 2020/11/04/15:50
  */
 @Data
-public class SingleChatTypeDTO {
+public class LoginTypeDTO {
 
     /**
-     * 目标会员id
+     * 会员id
      */
-    private Integer toMemberId;
+    private Integer memberId;
 
 }
