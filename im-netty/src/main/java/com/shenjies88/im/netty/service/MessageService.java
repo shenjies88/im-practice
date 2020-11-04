@@ -100,5 +100,11 @@ public class MessageService {
         Assert.notNull(toMemberId, "目标会员id不能为空");
         Integer myMemberId = MemberChannelCache.get(ctx.channel());
         Assert.isTrue(!toMemberId.equals(myMemberId), "目标会员不能是自己");
+
+        //缓存中获取目标会员管道
+        //不在线则不发送
+        //TODO 不管在线与否，发送到消息队列
+        //响应消息
+
     }
 }
