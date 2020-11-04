@@ -38,8 +38,8 @@ public class MemberChannelCache {
         memberChannelMap.putIfAbsent(memberId, ctx.channel());
         channelMemberMap.putIfAbsent(ctx.channel(), memberId);
         log.info("绑定会员 id:{}", memberId);
-        log.info("memberChannelMap size {}", memberChannelMap.size());
-        log.info("channelMemberMap size {}", channelMemberMap.size());
+        log.info("会员-管道  size {}", memberChannelMap.size());
+        log.info("管道-会员 size {}", channelMemberMap.size());
         return true;
     }
 
@@ -56,7 +56,14 @@ public class MemberChannelCache {
         }
         memberChannelMap.remove(memberId);
         log.info("移除会员 id:{}", memberId);
-        log.info("memberChannelMap size {}", memberChannelMap.size());
-        log.info("channelMemberMap size {}", channelMemberMap.size());
+        log.info("会员-管道 size {}", memberChannelMap.size());
+        log.info("管道-会员 size {}", channelMemberMap.size());
+    }
+
+    /**
+     * 根据管道获取
+     */
+    public static Integer get(Channel channel) {
+        return channelMemberMap.get(channel);
     }
 }

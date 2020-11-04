@@ -14,7 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
+import org.springframework.util.Assert;
 
 
 /**
@@ -36,10 +36,7 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
             body = ((TextWebSocketFrame) frame).text();
         }
         //无消息体
-        if (StringUtils.isEmpty(body)) {
-            messageManager.writeErrorClose(ctx, "无消息发送");
-            return;
-        }
+        Assert.hasText(body, "无消息发送");
         //无效的序列化
         MessageDTO messageDTO;
         try {
@@ -57,6 +54,7 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
                 messageService.handLogout(ctx);
                 break;
             case SINGLE_CHAT:
+                messageService.handSingleChat(ctx, messageDTO);
                 break;
             case GROUP_CHAT:
                 break;
@@ -74,6 +72,9 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         log.error("通道id:{} 发生异常", ctx.channel().id().asLongText(), cause);
+        if (cause instanceof IllegalArgumentException) {
+            messageManager.writeErrorClose(ctx, cause.getMessage());
+        }
         ctx.channel().close();
         MemberChannelCache.remove(ctx.channel());
     }
