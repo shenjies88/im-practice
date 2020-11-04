@@ -2,12 +2,18 @@ package com.shenjies88.im.netty.dto.base;
 
 import com.shenjies88.im.netty.constant.MessageContentTypeEnum;
 import com.shenjies88.im.netty.constant.MessageTypeEnum;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author shenjies88
  * @since 2020/11/04/15:39
  */
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 public class MessageDTO {
 

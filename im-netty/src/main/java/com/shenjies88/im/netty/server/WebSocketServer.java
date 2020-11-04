@@ -8,6 +8,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +26,8 @@ public class WebSocketServer {
     private Integer port;
     @Value("${spring.cloud.zookeeper.discovery.instance-host}")
     private String host;
+    @Autowired
+    private WebSocketServerInitializer initializer;
 
     private final EventLoopGroup bossGroup = new NioEventLoopGroup(1);
     private final EventLoopGroup workerGroup = new NioEventLoopGroup();
@@ -35,7 +38,7 @@ public class WebSocketServer {
         bootstrap.group(bossGroup, workerGroup)
                 .channel(NioServerSocketChannel.class)
                 .handler(new LoggingHandler(LogLevel.INFO))
-                .childHandler(new WebSocketServerInitializer());
+                .childHandler(initializer);
         log.warn("netty服务 port {}", port);
         bootstrap.bind(host, port).sync().addListener(future -> {
             if (future.isSuccess()) {

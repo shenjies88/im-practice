@@ -1,11 +1,16 @@
 package com.shenjies88.im.netty.handler;
 
+import com.alibaba.fastjson.JSON;
+import com.shenjies88.im.netty.dto.base.MessageDTO;
+import com.shenjies88.im.netty.manager.MyMessageManager;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketFrame;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 
@@ -14,17 +19,11 @@ import org.springframework.util.StringUtils;
  */
 @Slf4j
 @ChannelHandler.Sharable
+@Component
 public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocketFrame> {
 
-    /**
-     * 发送消息
-     *
-     * @param ctx 管道上下文
-     * @param msg 消息
-     */
-    private void writeMsg(ChannelHandlerContext ctx, String msg) {
-        ctx.channel().writeAndFlush(new TextWebSocketFrame(msg));
-    }
+    @Autowired
+    private MyMessageManager messageManager;
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, WebSocketFrame frame) throws Exception {
@@ -34,10 +33,30 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
         }
         //无消息体
         if (StringUtils.isEmpty(body)) {
-            writeMsg(ctx, "无消息发送");
+            messageManager.writeErrorClose(ctx, "无消息发送");
             return;
         }
         //无效的序列化
+        MessageDTO messageDTO;
+        try {
+            messageDTO = JSON.parseObject(body, MessageDTO.class);
+        } catch (Exception e) {
+            messageManager.writeErrorClose(ctx, "无效的消息格式");
+            return;
+        }
+        //TODO 业务处理
+        switch (messageDTO.getType()) {
+            case LOGIN:
+                break;
+            case LOGOUT:
+                break;
+            case SINGLE_CHAT:
+                break;
+            case GROUP_CHAT:
+                break;
+            default:
+                messageManager.writeErrorClose(ctx, "无效的消息类型");
+        }
     }
 
     @Override

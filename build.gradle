@@ -23,6 +23,7 @@ subprojects {
 		set('swaggerVersion', '2.0.5')
 		set('nettyVersion','4.1.53.Final')
 		set('zkVersion','3.4.12')
+		set('fastJsonVersion','1.2.74')
 	}
 
 	dependencyManagement {

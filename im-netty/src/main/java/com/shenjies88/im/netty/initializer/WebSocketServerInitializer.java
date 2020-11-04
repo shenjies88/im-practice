@@ -9,11 +9,17 @@ import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketServerCompressionHandler;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * @author shenjies88
  */
+@Component
 public class WebSocketServerInitializer extends ChannelInitializer<SocketChannel> {
+
+    @Autowired
+    private WebSocketFrameHandler webSocketFrameHandler;
 
     @Override
     public void initChannel(SocketChannel ch) throws Exception {
@@ -22,6 +28,6 @@ public class WebSocketServerInitializer extends ChannelInitializer<SocketChannel
         pipeline.addLast(new HttpObjectAggregator(65536));
         pipeline.addLast(new WebSocketServerCompressionHandler());
         pipeline.addLast(new WebSocketServerProtocolHandler(NettyConstant.WEBSOCKET_PATH, null, true));
-        pipeline.addLast(new WebSocketFrameHandler());
+        pipeline.addLast(webSocketFrameHandler);
     }
 }

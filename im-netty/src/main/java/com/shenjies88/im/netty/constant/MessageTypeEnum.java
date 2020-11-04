@@ -24,5 +24,10 @@ public enum MessageTypeEnum {
     /**
      * 群聊
      */
-    GROUP_CHAT
+    GROUP_CHAT,
+
+    /**
+     * 错误
+     */
+    ERROR
 }
