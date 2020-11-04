@@ -51,6 +51,9 @@ public class MemberChannelCache {
     public static void remove(Channel channel) {
         Integer memberId = channelMemberMap.get(channel);
         channelMemberMap.remove(channel);
+        if (memberId == null) {
+            return;
+        }
         memberChannelMap.remove(memberId);
         log.info("移除会员 id:{}", memberId);
         log.info("memberChannelMap size {}", memberChannelMap.size());
