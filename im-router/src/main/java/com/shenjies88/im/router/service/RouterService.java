@@ -1,6 +1,6 @@
 package com.shenjies88.im.router.service;
 
-import com.shenjies88.im.router.constant.MyConstant;
+import com.shenjies88.im.router.constant.RouterConstant;
 import com.shenjies88.im.router.hold.MyServerHold;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
@@ -21,7 +21,7 @@ public class RouterService {
     public ServiceInstance serviceInstance() {
         //服务列表为空，请求一次服务服务列表
         if (CollectionUtils.isEmpty(MyServerHold.serverList)) {
-            MyServerHold.serverList = client.getInstances(MyConstant.NETTY_SERVER_ID);
+            MyServerHold.serverList = client.getInstances(RouterConstant.NETTY_SERVER_ID);
         }
         if (CollectionUtils.isEmpty(MyServerHold.serverList)) {
             return null;

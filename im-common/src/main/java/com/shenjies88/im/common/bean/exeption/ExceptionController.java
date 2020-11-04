@@ -1,5 +1,6 @@
 package com.shenjies88.im.common.bean.exeption;
 
+import com.shenjies88.im.common.constant.CommonConstant;
 import com.shenjies88.im.common.vo.HttpResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -22,7 +23,7 @@ public class ExceptionController {
     @ExceptionHandler(IllegalArgumentException.class)
     public HttpResult<Void> handIllegalArgumentException(IllegalArgumentException e) {
         String errorMessage = "服务器繁忙";
-        if (!CollectionUtils.isEmpty(Arrays.stream(e.getStackTrace()).filter(o -> o.getClassName().startsWith("com.shenjies88")).collect(Collectors.toList()))) {
+        if (!CollectionUtils.isEmpty(Arrays.stream(e.getStackTrace()).filter(o -> o.getClassName().startsWith(CommonConstant.PACKAGES_PRE)).collect(Collectors.toList()))) {
             log.error("业务异常 {}", e.getMessage());
             errorMessage = e.getMessage();
         } else {

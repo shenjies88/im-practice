@@ -1,6 +1,6 @@
 package com.shenjies88.im.netty.initializer;
 
-import com.shenjies88.im.netty.constant.MyConstant;
+import com.shenjies88.im.netty.constant.NettyConstant;
 import com.shenjies88.im.netty.handler.WebSocketFrameHandler;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
@@ -21,7 +21,7 @@ public class WebSocketServerInitializer extends ChannelInitializer<SocketChannel
         pipeline.addLast(new HttpServerCodec());
         pipeline.addLast(new HttpObjectAggregator(65536));
         pipeline.addLast(new WebSocketServerCompressionHandler());
-        pipeline.addLast(new WebSocketServerProtocolHandler(MyConstant.WEBSOCKET_PATH, null, true));
+        pipeline.addLast(new WebSocketServerProtocolHandler(NettyConstant.WEBSOCKET_PATH, null, true));
         pipeline.addLast(new WebSocketFrameHandler());
     }
 }

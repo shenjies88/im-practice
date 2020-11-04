@@ -1,6 +1,6 @@
 package com.shenjies88.im.router.listener;
 
-import com.shenjies88.im.router.constant.MyConstant;
+import com.shenjies88.im.router.constant.RouterConstant;
 import com.shenjies88.im.router.hold.MyServerHold;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +22,6 @@ public class ZkListener implements DependencyWatcherListener {
 
     @Override
     public void stateChanged(String dependencyName, DependencyState newState) {
-        MyServerHold.serverList = client.getInstances(MyConstant.NETTY_SERVER_ID);
+        MyServerHold.serverList = client.getInstances(RouterConstant.NETTY_SERVER_ID);
     }
 }
