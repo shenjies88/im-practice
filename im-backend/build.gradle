@@ -1,0 +1,6 @@
+dependencies {
+    compile project(":im-common")
+    compile "com.alibaba:fastjson:${fastJsonVersion}"
+    compile "com.github.pagehelper:pagehelper-spring-boot-starter:${pageHelperVersion}"
+    runtimeOnly 'mysql:mysql-connector-java'
+}

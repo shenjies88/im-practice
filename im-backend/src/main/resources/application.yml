@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: im-backend
+  redis:
+    redisson:
+      file: classpath:redisson.yaml
+
+server:
+  servlet:
+    encoding:
+      force: true
+  shutdown: graceful
+
+# 分页助手
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+
+# mybatis
+mybatis:
+  mapper-locations: classpath:mapper/**/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+
+# 日志
+logging:
+  level:
+    root: info
+    com.shenjies88.im: debug
+  pattern:
+    console: "%d %clr(%-5p) %clr(${PID:-}){magenta} --- [%t] %clr(%c{10}.%M){cyan} \\(%file:%line\\) %m%n"

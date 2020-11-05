@@ -3,13 +3,16 @@ server:
 spring:
   application:
     name: im-router
+  redis:
+    redisson:
+      file: classpath:redisson.yaml
   cloud:
     zookeeper:
       dependency:
         # 不开启resttemplate
         resttemplate:
           enabled: false
-      connect-string: 10.168.1.2:2181
+      connect-string: 192.168.56.10:2181
       # 不注册自身
       discovery:
         register: false

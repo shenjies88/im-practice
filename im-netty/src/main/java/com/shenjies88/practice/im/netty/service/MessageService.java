@@ -47,7 +47,7 @@ public class MessageService {
         Assert.notNull(toMemberId, "目标会员id不能为空");
         Integer myMemberId = MemberChannelCache.get(ctx);
         Assert.isTrue(!toMemberId.equals(myMemberId), "目标会员不能是自己");
-
+        //TODO 从redis获取用户信息
         //TODO 不管在线与否，发送到消息队列
         //缓存中获取目标会员管道
         ChannelHandlerContext toCtx = MemberChannelCache.get(toMemberId);

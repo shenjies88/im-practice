@@ -5,11 +5,11 @@ spring:
     name: im-netty
   cloud:
     zookeeper:
-      connect-string: 10.168.1.2:2181
+      connect-string: 192.168.56.10:2181
       sessionTimeout: 5s
       connectionTimeout: 3s
       discovery:
-        instance-host: 10.168.1.102
+        instance-host: 127.0.0.1
         instance-port: 11111
 logging:
   level:
