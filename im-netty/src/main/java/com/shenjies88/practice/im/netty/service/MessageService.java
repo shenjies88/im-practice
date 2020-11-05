@@ -2,7 +2,6 @@ package com.shenjies88.practice.im.netty.service;
 
 import com.alibaba.fastjson.JSON;
 import com.shenjies88.practice.im.netty.cache.MemberChannelCache;
-import com.shenjies88.practice.im.netty.constant.MessageContentTypeEnum;
 import com.shenjies88.practice.im.netty.dto.SingleChatTxtDTO;
 import com.shenjies88.practice.im.netty.dto.base.LoginTypeDTO;
 import com.shenjies88.practice.im.netty.dto.base.MessageDTO;
@@ -72,7 +71,7 @@ public class MessageService {
         //是已登录
         Assert.notNull(MemberChannelCache.get(ctx.channel()), "您未登录");
         switch (messageDTO.getContentType()) {
-            case MessageContentTypeEnum.TXT:
+            case TXT:
                 handSingleChatTxt(ctx, messageDTO);
                 break;
             default:

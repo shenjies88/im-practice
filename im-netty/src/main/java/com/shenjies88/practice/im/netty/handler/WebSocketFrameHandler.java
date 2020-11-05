@@ -2,7 +2,6 @@ package com.shenjies88.practice.im.netty.handler;
 
 import com.alibaba.fastjson.JSON;
 import com.shenjies88.practice.im.netty.cache.MemberChannelCache;
-import com.shenjies88.practice.im.netty.constant.MessageTypeEnum;
 import com.shenjies88.practice.im.netty.dto.base.MessageDTO;
 import com.shenjies88.practice.im.netty.manager.MyMessageManager;
 import com.shenjies88.practice.im.netty.service.MessageService;
@@ -48,16 +47,16 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
         }
         //TODO 业务处理
         switch (messageDTO.getType()) {
-            case MessageTypeEnum.LOGIN:
+            case LOGIN:
                 messageService.handLogin(ctx, messageDTO);
                 break;
-            case MessageTypeEnum.LOGOUT:
+            case LOGOUT:
                 messageService.handLogout(ctx);
                 break;
-            case MessageTypeEnum.SINGLE_CHAT:
+            case SINGLE_CHAT:
                 messageService.handSingleChat(ctx, messageDTO);
                 break;
-            case MessageTypeEnum.GROUP_CHAT:
+            case GROUP_CHAT:
                 break;
             default:
                 messageManager.writeErrorClose(ctx, "无效的消息类型");
