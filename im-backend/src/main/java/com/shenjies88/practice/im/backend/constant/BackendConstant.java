@@ -5,5 +5,8 @@ package com.shenjies88.practice.im.backend.constant;
  * @since 2020/11/5-5:18 PM
  */
 public interface BackendConstant {
+
     String MY_BASE_PACKAGES = "com.shenjies88.practice.im.backend";
+
+    String MAPPER_SCAN_PACKAGES = MY_BASE_PACKAGES + ".mapper";
 }
