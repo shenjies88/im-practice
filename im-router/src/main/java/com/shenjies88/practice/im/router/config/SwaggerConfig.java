@@ -22,7 +22,7 @@ public class SwaggerConfig {
     public Docket docket() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.shenjies88.im.router.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.shenjies88.practice.im.router.controller"))
                 .paths(PathSelectors.any())
                 .build();
     }
