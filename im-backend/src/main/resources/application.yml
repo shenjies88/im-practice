@@ -4,12 +4,18 @@ spring:
   redis:
     redisson:
       file: classpath:redisson.yaml
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.56.10:3306/im_db?serverTimezone=Hongkong&useUnicode=true&characterEncoding=utf8&characterSetResults=utf8&useSSL=false&verifyServerCertificate=false&autoReconnct=true&autoReconnectForPools=true&allowMultiQueries=true
+    username: root
+    password: password
 
 server:
   servlet:
     encoding:
       force: true
   shutdown: graceful
+  port: 10086
 
 # 分页助手
 pagehelper:
@@ -27,6 +33,6 @@ mybatis:
 logging:
   level:
     root: info
-    com.shenjies88.im: debug
+    com.shenjies88.practice.im: debug
   pattern:
     console: "%d %clr(%-5p) %clr(${PID:-}){magenta} --- [%t] %clr(%c{10}.%M){cyan} \\(%file:%line\\) %m%n"

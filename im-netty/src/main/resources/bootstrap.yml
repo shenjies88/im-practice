@@ -14,6 +14,6 @@ spring:
 logging:
   level:
     root: info
-    com.shenjies88.im: debug
+    com.shenjies88.practice.im: debug
   pattern:
     console: "%d %clr(%-5p) %clr(${PID:-}){magenta} --- [%t] %clr(%c{10}.%M){cyan} \\(%file:%line\\) %m%n"
