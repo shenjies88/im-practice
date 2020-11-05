@@ -45,8 +45,8 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
             messageManager.writeErrorClose(ctx, "无效的消息格式");
             return;
         }
-        log.info("---------收到的消息---------");
-        log.info("消息体 {}", messageDTO);
+        log.info("\n\n------------收到的消息------------");
+        log.info("\n消息体 {}\n\n", messageDTO);
         //TODO 业务处理
         switch (messageDTO.getType()) {
             case LOGIN:
@@ -59,6 +59,7 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
                 messageService.handSingleChat(ctx, messageDTO, body);
                 break;
             case GROUP_CHAT:
+                messageService.handGroupChat(ctx, messageDTO, body);
                 break;
             default:
                 messageManager.writeErrorClose(ctx, "无效的消息类型");
@@ -67,13 +68,15 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        log.warn("通道关闭 {}", ctx.channel().id().asLongText());
+        log.warn("\n\n------------管道关闭------------");
+        log.warn("\n管道id:{}\n\n", ctx.channel().id().asLongText());
         MemberChannelCache.remove(ctx);
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        log.error("通道id:{} 发生异常", ctx.channel().id().asLongText(), cause);
+        log.warn("\n\n------------管道异常------------");
+        log.error("\n管道id:{} 发生异常\n\n", ctx.channel().id().asLongText(), cause);
         if (cause instanceof IllegalArgumentException) {
             messageManager.writeErrorClose(ctx, cause.getMessage());
         }
