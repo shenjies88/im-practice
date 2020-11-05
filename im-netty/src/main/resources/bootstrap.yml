@@ -9,7 +9,7 @@ spring:
       sessionTimeout: 5s
       connectionTimeout: 3s
       discovery:
-        instance-host: 10.168.1.193
+        instance-host: 10.168.1.102
         instance-port: 11111
 logging:
   level:

@@ -1,6 +1,5 @@
 package com.shenjies88.practice.im.netty.cache;
 
-import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
 
@@ -14,29 +13,26 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class MemberChannelCache {
 
-    private static final Map<Integer, Channel> memberChannelMap = new ConcurrentHashMap();
-    private static final Map<Channel, Integer> channelMemberMap = new ConcurrentHashMap();
+    private static final Map<Integer, ChannelHandlerContext> memberChannelMap = new ConcurrentHashMap();
+    private static final Map<ChannelHandlerContext, Integer> channelMemberMap = new ConcurrentHashMap();
 
     /**
      * 保存
-     *
-     * @param memberId 会员id
-     * @param ctx      管道上下文
      */
     public static boolean save(Integer memberId, ChannelHandlerContext ctx) {
         //查看该用户当前管道是否有对应的id
-        Integer cacheId = channelMemberMap.get(ctx.channel());
+        Integer cacheId = channelMemberMap.get(ctx);
         //如果id存在，拒绝保存
         if (cacheId != null) {
             return false;
         }
-        Channel channel = memberChannelMap.get(memberId);
+        ChannelHandlerContext channel = memberChannelMap.get(memberId);
         //如果管道存在，拒绝保存
         if (channel != null) {
             return false;
         }
-        memberChannelMap.putIfAbsent(memberId, ctx.channel());
-        channelMemberMap.putIfAbsent(ctx.channel(), memberId);
+        memberChannelMap.putIfAbsent(memberId, ctx);
+        channelMemberMap.putIfAbsent(ctx, memberId);
         log.info("绑定会员 id:{}", memberId);
         log.info("会员-管道  size {}", memberChannelMap.size());
         log.info("管道-会员 size {}", channelMemberMap.size());
@@ -45,12 +41,10 @@ public class MemberChannelCache {
 
     /**
      * 移除
-     *
-     * @param channel 管道
      */
-    public static void remove(Channel channel) {
-        Integer memberId = channelMemberMap.get(channel);
-        channelMemberMap.remove(channel);
+    public static void remove(ChannelHandlerContext ctx) {
+        Integer memberId = channelMemberMap.get(ctx);
+        channelMemberMap.remove(ctx);
         if (memberId == null) {
             return;
         }
@@ -63,7 +57,14 @@ public class MemberChannelCache {
     /**
      * 根据管道获取
      */
-    public static Integer get(Channel channel) {
-        return channelMemberMap.get(channel);
+    public static Integer get(ChannelHandlerContext ctx) {
+        return channelMemberMap.get(ctx);
+    }
+
+    /**
+     * 根据会员id获取管道
+     */
+    public static ChannelHandlerContext get(Integer memberId) {
+        return memberChannelMap.get(memberId);
     }
 }

@@ -45,6 +45,8 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
             messageManager.writeErrorClose(ctx, "无效的消息格式");
             return;
         }
+        log.info("---------收到的消息---------");
+        log.info("消息体 {}", messageDTO);
         //TODO 业务处理
         switch (messageDTO.getType()) {
             case LOGIN:
@@ -54,7 +56,7 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
                 messageService.handLogout(ctx);
                 break;
             case SINGLE_CHAT:
-                messageService.handSingleChat(ctx, messageDTO);
+                messageService.handSingleChat(ctx, messageDTO, body);
                 break;
             case GROUP_CHAT:
                 break;
@@ -66,7 +68,7 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         log.warn("通道关闭 {}", ctx.channel().id().asLongText());
-        MemberChannelCache.remove(ctx.channel());
+        MemberChannelCache.remove(ctx);
     }
 
     @Override
@@ -76,6 +78,6 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
             messageManager.writeErrorClose(ctx, cause.getMessage());
         }
         ctx.channel().close();
-        MemberChannelCache.remove(ctx.channel());
+        MemberChannelCache.remove(ctx);
     }
 }

@@ -18,9 +18,6 @@ public class MyMessageManager {
 
     /**
      * 发送错误消息并且关闭链接
-     *
-     * @param ctx 管道上下文
-     * @param msg 消息
      */
     public void writeErrorClose(ChannelHandlerContext ctx, String msg) {
         MessageDTO messageDTO = MessageDTO.builder()
@@ -32,9 +29,6 @@ public class MyMessageManager {
 
     /**
      * 发送错误消息
-     *
-     * @param ctx 管道上下文
-     * @param msg 消息
      */
     public void writeError(ChannelHandlerContext ctx, String msg) {
         MessageDTO messageDTO = MessageDTO.builder()
@@ -45,13 +39,18 @@ public class MyMessageManager {
 
     /**
      * 成功响应
-     *
-     * @param ctx 管道上下文
      */
     public void writeSuccessful(ChannelHandlerContext ctx) {
         MessageDTO messageDTO = MessageDTO.builder()
                 .type(MessageTypeEnum.SUCCESSFUL)
                 .contentJson("发送成功").build();
         ctx.channel().writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(messageDTO)));
+    }
+
+    /**
+     * 发送 Body
+     */
+    public void writeBody(ChannelHandlerContext ctx, String body) {
+        ctx.channel().writeAndFlush(new TextWebSocketFrame(body));
     }
 }

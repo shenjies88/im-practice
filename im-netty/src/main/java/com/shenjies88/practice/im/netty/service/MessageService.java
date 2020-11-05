@@ -57,22 +57,23 @@ public class MessageService {
      */
     public void handLogout(ChannelHandlerContext ctx) {
         //移除通道和会员的缓存
-        MemberChannelCache.remove(ctx.channel());
+        MemberChannelCache.remove(ctx);
         ctx.channel().close();
     }
 
     /**
      * 处理私聊消息
      *
-     * @param ctx
-     * @param messageDTO
+     * @param ctx        管道上下文
+     * @param messageDTO 消息体
+     * @param body       消息体json
      */
-    public void handSingleChat(ChannelHandlerContext ctx, MessageDTO messageDTO) {
+    public void handSingleChat(ChannelHandlerContext ctx, MessageDTO messageDTO, String body) {
         //是已登录
-        Assert.notNull(MemberChannelCache.get(ctx.channel()), "您未登录");
+        Assert.notNull(MemberChannelCache.get(ctx), "您未登录");
         switch (messageDTO.getContentType()) {
             case TXT:
-                handSingleChatTxt(ctx, messageDTO);
+                handSingleChatTxt(ctx, messageDTO, body);
                 break;
             default:
                 messageManager.writeErrorClose(ctx, "无效的内容类型");
@@ -82,14 +83,15 @@ public class MessageService {
     /**
      * 处理 私聊-文本
      *
-     * @param ctx  管道上下文
-     * @param body 消息体
+     * @param ctx        管道上下文
+     * @param messageDTO 消息体
+     * @param body       消息体json
      */
-    private void handSingleChatTxt(ChannelHandlerContext ctx, MessageDTO body) {
+    private void handSingleChatTxt(ChannelHandlerContext ctx, MessageDTO messageDTO, String body) {
         //序列化
         SingleChatTxtDTO singleChatTxtDTO;
         try {
-            singleChatTxtDTO = JSON.parseObject(body.getContentJson(), SingleChatTxtDTO.class);
+            singleChatTxtDTO = JSON.parseObject(messageDTO.getContentJson(), SingleChatTxtDTO.class);
         } catch (Exception e) {
             messageManager.writeErrorClose(ctx, "无效的内容类型");
             return;
@@ -98,13 +100,19 @@ public class MessageService {
         Assert.hasText(singleChatTxtDTO.getMsg(), "消息内容不能为空");
         Integer toMemberId = singleChatTxtDTO.getToMemberId();
         Assert.notNull(toMemberId, "目标会员id不能为空");
-        Integer myMemberId = MemberChannelCache.get(ctx.channel());
+        Integer myMemberId = MemberChannelCache.get(ctx);
         Assert.isTrue(!toMemberId.equals(myMemberId), "目标会员不能是自己");
 
-        //缓存中获取目标会员管道
-        //不在线则不发送
         //TODO 不管在线与否，发送到消息队列
-        //响应消息
+        //缓存中获取目标会员管道
+        ChannelHandlerContext toCtx = MemberChannelCache.get(toMemberId);
+        if (toCtx == null) {
+            messageManager.writeError(ctx, "目标用户不在线");
+            return;
+        }
+        //发送给目标用户
+        messageManager.writeBody(toCtx, body);
+        messageManager.writeSuccessful(ctx);
 
     }
 }
