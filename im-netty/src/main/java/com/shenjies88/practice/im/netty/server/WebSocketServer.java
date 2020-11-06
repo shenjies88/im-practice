@@ -22,9 +22,9 @@ import javax.annotation.PreDestroy;
 @Component
 public class WebSocketServer {
 
-    @Value("${spring.cloud.zookeeper.discovery.instance-port}")
-    private Integer port;
-    @Value("${spring.cloud.zookeeper.discovery.instance-host}")
+    @Value("${spring.cloud.zookeeper.discovery.metadata.wsPort}")
+    private Integer wsPort;
+    @Value("${spring.cloud.zookeeper.discovery.metadata.host}")
     private String host;
     @Autowired
     private WebSocketServerInitializer initializer;
@@ -39,8 +39,8 @@ public class WebSocketServer {
                 .channel(NioServerSocketChannel.class)
                 .handler(new LoggingHandler(LogLevel.INFO))
                 .childHandler(initializer);
-        log.warn("netty服务 port {}", port);
-        bootstrap.bind(host, port).sync().addListener(future -> {
+        log.warn("netty服务 wsPort {}", wsPort);
+        bootstrap.bind(host, wsPort).sync().addListener(future -> {
             if (future.isSuccess()) {
                 log.warn("netty服务启动成功");
             } else {
@@ -53,6 +53,6 @@ public class WebSocketServer {
     public void destroy() {
         bossGroup.shutdownGracefully().syncUninterruptibly();
         workerGroup.shutdownGracefully().syncUninterruptibly();
-        log.warn("netty服务关闭 port {}", port);
+        log.warn("netty服务关闭 wsPort {}", wsPort);
     }
 }

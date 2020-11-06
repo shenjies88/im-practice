@@ -9,6 +9,7 @@ public abstract class RedisKeys {
     private static final String PREFIX = "im";
     private static final String TOKEN = PREFIX + ":token";
     private static final String LIVE_TOKEN = PREFIX + ":live-token";
+    private static final String USER_NETTY_LOGIN = PREFIX + ":user-netty-login";
 
     /**
      * 生成token key
@@ -30,5 +31,16 @@ public abstract class RedisKeys {
      */
     public static String createLiveToken(Integer id) {
         return LIVE_TOKEN + ":" + id;
+    }
+
+    /**
+     * 生成 用户netty登陆地址 key
+     * 格式 im:user-netty-login:id
+     *
+     * @param id
+     * @return
+     */
+    public static String createUserNettyLogin(Integer id) {
+        return USER_NETTY_LOGIN + ":" + id;
     }
 }

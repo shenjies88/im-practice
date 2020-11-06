@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class HttpResult<T> {
+public class HttpResultVO<T> {
 
     @ApiModelProperty("状态码 0-正常 1-异常")
     private Integer code;
@@ -25,15 +25,15 @@ public class HttpResult<T> {
     @ApiModelProperty("具体数据")
     private T data;
 
-    public static HttpResult<Void> success() {
-        return new HttpResult<>(0, true, "success", null);
+    public static HttpResultVO<Void> success() {
+        return new HttpResultVO<>(0, true, "success", null);
     }
 
-    public static <U> HttpResult<U> success(U data) {
-        return new HttpResult<>(0, true, "success", data);
+    public static <U> HttpResultVO<U> success(U data) {
+        return new HttpResultVO<>(0, true, "success", data);
     }
 
-    public static HttpResult<Void> fail(String message) {
-        return new HttpResult<>(1, false, message, null);
+    public static HttpResultVO<Void> fail(String message) {
+        return new HttpResultVO<>(1, false, message, null);
     }
 }

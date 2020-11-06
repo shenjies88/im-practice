@@ -9,8 +9,10 @@ spring:
       sessionTimeout: 5s
       connectionTimeout: 3s
       discovery:
-        instance-host: 127.0.0.1
-        instance-port: 11111
+        metadata:
+          host: 127.0.0.1
+          serverPort: 8010
+          wsPort: 11111
 logging:
   level:
     root: info

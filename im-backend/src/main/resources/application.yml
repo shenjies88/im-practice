@@ -36,3 +36,6 @@ logging:
     com.shenjies88.practice.im: debug
   pattern:
     console: "%d %clr(%-5p) %clr(${PID:-}){magenta} --- [%t] %clr(%c{10}.%M){cyan} \\(%file:%line\\) %m%n"
+
+# router服务地址
+router-base-url: http://127.0.0.1:8090

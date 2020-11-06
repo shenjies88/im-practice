@@ -1,12 +1,15 @@
 package com.shenjies88.practice.im.backend.manager;
 
+import com.alibaba.fastjson.JSON;
 import com.shenjies88.practice.im.backend.constant.RedisKeys;
 import com.shenjies88.practice.im.backend.vo.ContextTokenVO;
+import com.shenjies88.practice.im.common.vo.ServiceMetadataVO;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -84,5 +87,14 @@ public class MyCacheManager {
      */
     public void removeLiveToken(Integer id) {
         redisTemplate.delete(RedisKeys.createLiveToken(id));
+    }
+
+    /**
+     * 保存 用户netty登陆地址
+     *
+     * @param vo
+     */
+    public void saveUserNettyLogin(ServiceMetadataVO vo) {
+        redisTemplate.opsForHash().putAll(RedisKeys.createUserNettyLogin(vo.getId()), (Map<?, ?>) JSON.toJSON(vo));
     }
 }

@@ -1,7 +1,7 @@
 package com.shenjies88.practice.im.common.bean.exeption;
 
 import com.shenjies88.practice.im.common.constant.CommonConstant;
-import com.shenjies88.practice.im.common.vo.HttpResult;
+import com.shenjies88.practice.im.common.vo.HttpResultVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.CollectionUtils;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public class ExceptionController {
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public HttpResult<Void> handIllegalArgumentException(IllegalArgumentException e) {
+    public HttpResultVO<Void> handIllegalArgumentException(IllegalArgumentException e) {
         String errorMessage = "服务器繁忙";
         if (!CollectionUtils.isEmpty(Arrays.stream(e.getStackTrace()).filter(o -> o.getClassName().startsWith(CommonConstant.PACKAGES_PRE)).collect(Collectors.toList()))) {
             log.error("业务异常 {}", e.getMessage());
@@ -29,12 +29,12 @@ public class ExceptionController {
         } else {
             log.error("服务器异常", e);
         }
-        return HttpResult.fail(errorMessage);
+        return HttpResultVO.fail(errorMessage);
     }
 
     @ExceptionHandler(Exception.class)
-    public HttpResult<Void> exceptionHandler(Exception e) {
+    public HttpResultVO<Void> exceptionHandler(Exception e) {
         log.error("通用异常", e);
-        return HttpResult.fail("服务器繁忙");
+        return HttpResultVO.fail("服务器繁忙");
     }
 }
