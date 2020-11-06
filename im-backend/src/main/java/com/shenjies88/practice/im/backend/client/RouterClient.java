@@ -32,21 +32,19 @@ public class RouterClient {
      * 获取 netty服务地址
      */
     public ServiceMetadataVO getNettyAddr() {
-        try {
-            HttpResultVO<ServiceMetadataVO> result = webClient().get()
-                    .uri("/router")
-                    .retrieve()
-                    .bodyToMono(new ParameterizedTypeReference<HttpResultVO<ServiceMetadataVO>>() {
-                    })
-                    .block();
-            log.info("获取netty服务结果 {}", result);
-            Assert.isTrue(result.getStatus(), "服务器异常，请稍后再试");
-            return result.getData();
-        } catch (Exception e) {
-            log.error("获取netty服务 异常", e);
-            Assert.isTrue(false, "服务器异常，请稍后再试");
-            return null;
-        }
+        HttpResultVO<ServiceMetadataVO> result = webClient().get()
+                .uri("/router")
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<HttpResultVO<ServiceMetadataVO>>() {
+                })
+                .doOnError(Exception.class, e -> {
+                    log.error("获取netty服务 异常", e);
+                    Assert.isTrue(false, "服务器异常，请稍后再试");
+                })
+                .block();
+        log.info("获取netty服务结果 {}", result);
+        Assert.isTrue(result.getStatus(), "服务器异常，请稍后再试");
+        return result.getData();
     }
 
     /**
@@ -55,13 +53,11 @@ public class RouterClient {
      * @param id 用户id
      */
     public void logout(Integer id) {
-        try {
-            webClient().delete()
-                    .uri("/router/" + id)
-                    .retrieve()
-                    .bodyToMono(Map.class).block();
-        } catch (Exception e) {
-            log.error("通知对应netty服务删除对应管道 异常", e);
-        }
+        webClient().delete()
+                .uri("/router/" + id)
+                .retrieve()
+                .bodyToMono(Map.class)
+                .doOnError(Exception.class, e -> log.error("通知对应netty服务删除对应管道 异常", e))
+                .block();
     }
 }
