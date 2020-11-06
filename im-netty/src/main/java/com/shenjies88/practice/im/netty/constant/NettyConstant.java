@@ -6,4 +6,5 @@ package com.shenjies88.practice.im.netty.constant;
 public interface NettyConstant {
 
     String WEBSOCKET_PATH = "/my-im";
+    String MY_BASE_PACKAGES = "com.shenjies88.practice.im.netty";
 }
