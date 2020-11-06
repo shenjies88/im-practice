@@ -2,7 +2,7 @@ package com.shenjies88.practice.im.netty.manager;
 
 import com.alibaba.fastjson.JSON;
 import com.shenjies88.practice.im.common.constant.MessageTypeEnum;
-import com.shenjies88.practice.im.netty.dto.base.MessageDTO;
+import com.shenjies88.practice.im.common.dto.base.MessageDTO;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import lombok.extern.slf4j.Slf4j;

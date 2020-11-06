@@ -14,7 +14,7 @@ spring:
       discovery:
         metadata:
           host: 127.0.0.1
-          serverPort: 8010
+          serverPort: ${server.port}
           wsPort: 11111
 logging:
   level:
