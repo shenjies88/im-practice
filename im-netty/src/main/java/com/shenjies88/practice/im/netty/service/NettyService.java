@@ -26,6 +26,7 @@ public class NettyService {
         if (ctx == null) {
             return;
         }
+        log.warn("用户 id: {} 下线", id);
         MemberChannelCache.remove(ctx);
     }
 

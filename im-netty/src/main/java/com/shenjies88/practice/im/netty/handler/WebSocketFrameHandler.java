@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.shenjies88.practice.im.common.dto.base.MessageDTO;
 import com.shenjies88.practice.im.netty.cache.MemberChannelCache;
 import com.shenjies88.practice.im.netty.manager.MyMessageManager;
-import com.shenjies88.practice.im.netty.service.MessageService;
+import com.shenjies88.practice.im.netty.service.MessageHandService;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -27,7 +27,7 @@ import org.springframework.util.Assert;
 public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocketFrame> {
 
     private final MyMessageManager messageManager;
-    private final MessageService messageService;
+    private final MessageHandService messageHandService;
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, WebSocketFrame frame) throws Exception {
@@ -49,16 +49,16 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
         log.info("\n消息体 {}\n\n", messageDTO);
         switch (messageDTO.getType()) {
             case LOGIN:
-                messageService.handLogin(ctx, messageDTO);
+                messageHandService.handLogin(ctx, messageDTO);
                 break;
             case LOGOUT:
-                messageService.handLogout(ctx);
+                messageHandService.handLogout(ctx);
                 break;
             case SINGLE_CHAT:
-                messageService.handSingleChat(ctx, messageDTO, body);
+                messageHandService.handSingleChat(ctx, messageDTO, body);
                 break;
             case GROUP_CHAT:
-                messageService.handGroupChat(ctx, messageDTO, body);
+                messageHandService.handGroupChat(ctx, messageDTO, body);
                 break;
             default:
                 messageManager.writeErrorClose(ctx, "无效的消息类型");
