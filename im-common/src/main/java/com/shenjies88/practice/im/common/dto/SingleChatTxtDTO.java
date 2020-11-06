@@ -1,6 +1,6 @@
-package com.shenjies88.practice.im.netty.dto;
+package com.shenjies88.practice.im.common.dto;
 
-import com.shenjies88.practice.im.netty.dto.base.SingleChatTypeDTO;
+import com.shenjies88.practice.im.common.dto.base.SingleChatTypeDTO;
 import lombok.Data;
 
 /**

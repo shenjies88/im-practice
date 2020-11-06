@@ -1,9 +1,9 @@
 package com.shenjies88.practice.im.router.service;
 
 import com.alibaba.fastjson.JSON;
+import com.shenjies88.practice.im.common.bean.client.NettyClient;
 import com.shenjies88.practice.im.common.bean.manager.MyCacheManager;
 import com.shenjies88.practice.im.common.vo.ServiceMetadataVO;
-import com.shenjies88.practice.im.router.client.NettyClient;
 import com.shenjies88.practice.im.router.constant.RouterConstant;
 import com.shenjies88.practice.im.router.hold.MyServerHold;
 import lombok.AllArgsConstructor;
@@ -48,6 +48,6 @@ public class RouterService {
             return;
         }
         //异步调用对应的netty服务删除管道实例
-        nettyClient.logout("http://" + serviceMetadataVO.getHost() + ":" + serviceMetadataVO.getServerPort(), id);
+        nettyClient.logout(NettyClient.createBaseUrl(serviceMetadataVO.getHost(), serviceMetadataVO.getServerPort()), id);
     }
 }

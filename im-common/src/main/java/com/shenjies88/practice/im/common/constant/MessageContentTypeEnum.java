@@ -1,4 +1,4 @@
-package com.shenjies88.practice.im.netty.constant;
+package com.shenjies88.practice.im.common.constant;
 
 /**
  * @author shenjies88

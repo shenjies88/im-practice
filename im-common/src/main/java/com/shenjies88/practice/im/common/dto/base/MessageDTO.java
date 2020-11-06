@@ -1,7 +1,7 @@
-package com.shenjies88.practice.im.netty.dto.base;
+package com.shenjies88.practice.im.common.dto.base;
 
-import com.shenjies88.practice.im.netty.constant.MessageContentTypeEnum;
-import com.shenjies88.practice.im.netty.constant.MessageTypeEnum;
+import com.shenjies88.practice.im.common.constant.MessageContentTypeEnum;
+import com.shenjies88.practice.im.common.constant.MessageTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

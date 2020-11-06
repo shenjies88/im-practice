@@ -1,4 +1,4 @@
-package com.shenjies88.practice.im.netty.dto.base;
+package com.shenjies88.practice.im.common.dto.base;
 
 import lombok.Data;
 

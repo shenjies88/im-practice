@@ -1,8 +1,8 @@
 package com.shenjies88.practice.im.netty.handler;
 
 import com.alibaba.fastjson.JSON;
+import com.shenjies88.practice.im.common.dto.base.MessageDTO;
 import com.shenjies88.practice.im.netty.cache.MemberChannelCache;
-import com.shenjies88.practice.im.netty.dto.base.MessageDTO;
 import com.shenjies88.practice.im.netty.manager.MyMessageManager;
 import com.shenjies88.practice.im.netty.service.MessageService;
 import io.netty.channel.ChannelHandler;

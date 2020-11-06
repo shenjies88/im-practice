@@ -1,11 +1,14 @@
 package com.shenjies88.practice.im.netty.service;
 
 import com.alibaba.fastjson.JSON;
+import com.shenjies88.practice.im.common.bean.client.NettyClient;
+import com.shenjies88.practice.im.common.bean.manager.MyCacheManager;
+import com.shenjies88.practice.im.common.dto.GroupChatTxtDTO;
+import com.shenjies88.practice.im.common.dto.SingleChatTxtDTO;
+import com.shenjies88.practice.im.common.dto.base.LoginTypeDTO;
+import com.shenjies88.practice.im.common.dto.base.MessageDTO;
+import com.shenjies88.practice.im.common.vo.ServiceMetadataVO;
 import com.shenjies88.practice.im.netty.cache.MemberChannelCache;
-import com.shenjies88.practice.im.netty.dto.GroupChatTxtDTO;
-import com.shenjies88.practice.im.netty.dto.SingleChatTxtDTO;
-import com.shenjies88.practice.im.netty.dto.base.LoginTypeDTO;
-import com.shenjies88.practice.im.netty.dto.base.MessageDTO;
 import com.shenjies88.practice.im.netty.manager.MyMessageManager;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.AllArgsConstructor;
@@ -13,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+
 
 /**
  * @author shenjies88
@@ -24,6 +28,8 @@ import org.springframework.util.Assert;
 public class MessageService {
 
     private final MyMessageManager messageManager;
+    private final MyCacheManager cacheManager;
+    private final NettyClient nettyClient;
 
     /**
      * 处理 私聊-文本
@@ -47,13 +53,17 @@ public class MessageService {
         Assert.notNull(toMemberId, "目标会员id不能为空");
         Integer myMemberId = MemberChannelCache.get(ctx);
         Assert.isTrue(!toMemberId.equals(myMemberId), "目标会员不能是自己");
-        //TODO 从redis获取用户信息
-        //TODO 不管在线与否，发送到消息队列
         //缓存中获取目标会员管道
         ChannelHandlerContext toCtx = MemberChannelCache.get(toMemberId);
         if (toCtx == null) {
-            messageManager.writeError(ctx, "目标用户不在线");
-            return;
+            //从redis获取用户信息
+            ServiceMetadataVO userNettyLogin = cacheManager.getUserNettyLogin(toMemberId);
+            if (userNettyLogin == null) {
+                messageManager.writeError(ctx, "目标用户不在线");
+                return;
+            }
+            //异步调用 用户所在的netty服务发送消息
+            nettyClient.sendSingleChat(NettyClient.createBaseUrl(userNettyLogin.getHost(), userNettyLogin.getServerPort()), messageDTO, toMemberId);
         }
         //发送给目标用户
         messageManager.writeBody(toCtx, body);
@@ -82,7 +92,6 @@ public class MessageService {
         Assert.notNull(groupId, "目标群id不能为空");
 
         //TODO 从redis中获取群在线用户信息，不在本实例的用户批量一次http请求发送到另一个实例的接口
-        //TODO 不管在线与否，发送到消息队列
 
         //发送给目标群
 
