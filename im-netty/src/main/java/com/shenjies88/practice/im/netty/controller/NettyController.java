@@ -31,4 +31,6 @@ public class NettyController {
         nettyService.logout(id);
         return HttpResultVO.success();
     }
+
+    //TODO 处理私聊消息
 }

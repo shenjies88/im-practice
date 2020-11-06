@@ -147,6 +147,7 @@ public class MessageService {
         Assert.notNull(MemberChannelCache.get(ctx), "您未登录");
         switch (messageDTO.getContentType()) {
             case TXT:
+                //TODO 预校验，发送使用同一个方法
                 handSingleChatTxt(ctx, messageDTO, body);
                 break;
             default:
