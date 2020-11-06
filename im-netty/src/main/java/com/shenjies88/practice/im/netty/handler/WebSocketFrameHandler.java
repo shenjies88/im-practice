@@ -47,7 +47,6 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
         }
         log.info("\n\n------------收到的消息------------");
         log.info("\n消息体 {}\n\n", messageDTO);
-        //TODO 业务处理
         switch (messageDTO.getType()) {
             case LOGIN:
                 messageService.handLogin(ctx, messageDTO);

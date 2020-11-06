@@ -49,7 +49,7 @@ public class RegularUtil {
         if (StringUtils.isEmpty(pwd)) {
             return false;
         }
-        if (pwd.length() < 8) {
+        if (pwd.length() < 6) {
             return false;
         }
         return Pattern.matches(PWD_REGEX, pwd);

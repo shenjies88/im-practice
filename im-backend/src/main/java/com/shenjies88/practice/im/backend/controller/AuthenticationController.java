@@ -2,6 +2,7 @@ package com.shenjies88.practice.im.backend.controller;
 
 import com.shenjies88.practice.im.backend.service.AuthenticationService;
 import com.shenjies88.practice.im.backend.utils.RegularUtil;
+import com.shenjies88.practice.im.backend.vo.authentication.LoginReqVO;
 import com.shenjies88.practice.im.backend.vo.authentication.RegReqVO;
 import com.shenjies88.practice.im.common.vo.HttpResult;
 import io.swagger.annotations.Api;
@@ -20,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Api(tags = "鉴权接口")
 @AllArgsConstructor(onConstructor_ = @Autowired)
-@RequestMapping("/authentication")
+@RequestMapping("/im/authentication")
 @RestController
 public class AuthenticationController {
 
@@ -33,5 +34,20 @@ public class AuthenticationController {
         Assert.isTrue(RegularUtil.legalPassword(params.getPwd()), "密码强度过弱");
         Assert.isTrue(RegularUtil.isPhone(params.getAccount()), "手机号格式不正确");
         return HttpResult.success(authenticationService.regLogin(params));
+    }
+
+    @ApiOperation("登陆")
+    @PostMapping("/login")
+    public HttpResult<String> login(@RequestBody LoginReqVO params) {
+        Assert.isTrue(RegularUtil.isPhone(params.getAccount()), "手机号格式不正确");
+        Assert.hasText(params.getPwd(), "密码不能为空");
+        return HttpResult.success(authenticationService.login(params));
+    }
+
+    @ApiOperation("退出登陆")
+    @PostMapping("/logout")
+    public HttpResult<Void> logout() {
+        authenticationService.logout();
+        return HttpResult.success();
     }
 }

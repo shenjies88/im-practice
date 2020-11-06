@@ -1,7 +1,7 @@
 package com.shenjies88.practice.im.backend.manager;
 
 import com.shenjies88.practice.im.backend.constant.RedisKeys;
-import com.shenjies88.practice.im.backend.vo.authentication.LoginRespVO;
+import com.shenjies88.practice.im.backend.vo.ContextTokenVO;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -20,36 +20,45 @@ public class MyCacheManager {
     private final RedisTemplate<String, Object> redisTemplate;
 
     /**
-     * token过期时间
+     * token 过期时间
      */
     private static final long TOKEN_EXPIRED = 60L * 24L;
     /**
-     * token过期时间单位
+     * token 过期时间单位
      */
     private static final TimeUnit TOKEN_UNIT = TimeUnit.MINUTES;
 
     /**
-     * 缓存token
+     * 缓存 token
      *
      * @param token
      * @param vo
      */
-    public void saveToken(String token, LoginRespVO vo) {
+    public void saveToken(String token, ContextTokenVO vo) {
         redisTemplate.opsForValue().set(RedisKeys.createToken(token), vo, TOKEN_EXPIRED, TOKEN_UNIT);
     }
 
     /**
-     * 获取vo
+     * 获取 vo
      *
      * @param token
      * @return
      */
-    public LoginRespVO getToken(String token) {
-        return (LoginRespVO) redisTemplate.opsForValue().get(RedisKeys.createToken(token));
+    public ContextTokenVO getToken(String token) {
+        return (ContextTokenVO) redisTemplate.opsForValue().get(RedisKeys.createToken(token));
     }
 
     /**
-     * 缓存存活的token
+     * 删除 token
+     *
+     * @param token
+     */
+    public void removeToken(String token) {
+        redisTemplate.delete(RedisKeys.createToken(token));
+    }
+
+    /**
+     * 缓存 live-token
      *
      * @param id    用户id
      * @param token
@@ -59,12 +68,21 @@ public class MyCacheManager {
     }
 
     /**
-     * 获取token
+     * 获取 live-token
      *
      * @param id
      * @return
      */
     public String getLiveToken(Integer id) {
         return (String) redisTemplate.opsForValue().get(RedisKeys.createLiveToken(id));
+    }
+
+    /**
+     * 删除 live-token
+     *
+     * @param id
+     */
+    public void removeLiveToken(Integer id) {
+        redisTemplate.delete(RedisKeys.createLiveToken(id));
     }
 }

@@ -3,7 +3,9 @@ package com.shenjies88.practice.im.backend.service;
 import com.shenjies88.practice.im.backend.entity.UserDO;
 import com.shenjies88.practice.im.backend.manager.MyCacheManager;
 import com.shenjies88.practice.im.backend.mapper.UserMapper;
-import com.shenjies88.practice.im.backend.vo.authentication.LoginRespVO;
+import com.shenjies88.practice.im.backend.utils.TokenUtil;
+import com.shenjies88.practice.im.backend.vo.ContextTokenVO;
+import com.shenjies88.practice.im.backend.vo.authentication.LoginReqVO;
 import com.shenjies88.practice.im.backend.vo.authentication.RegReqVO;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,14 +27,14 @@ public class AuthenticationService {
     private final MyCacheManager cacheManager;
 
     /**
-     * 生成登陆VO并缓存token
+     * 生成VO并缓存token
      *
      * @param entity
      * @return
      */
-    private LoginRespVO createLoginCacheVo(UserDO entity) {
+    private ContextTokenVO createContextTokenCache(UserDO entity) {
         String token = UUID.randomUUID().toString().replaceAll("-", "");
-        LoginRespVO vo = LoginRespVO.builder()
+        ContextTokenVO vo = ContextTokenVO.builder()
                 .account(entity.getAccount())
                 .id(entity.getId())
                 .nickname(entity.getNickname())
@@ -51,7 +53,18 @@ public class AuthenticationService {
                 .pwd(params.getPwd())
                 .creatTime(new Date()).build();
         userMapper.insert(build);
-        return createLoginCacheVo(build).getToken();
+        return createContextTokenCache(build).getToken();
     }
 
+    public String login(LoginReqVO params) {
+        UserDO userDO = userMapper.getByAccount(params.getAccount());
+        boolean pass = userDO != null && userDO.getPwd().equals(params.getPwd());
+        Assert.isTrue(pass, "账号或密码不匹配");
+        return createContextTokenCache(userDO).getToken();
+    }
+
+    public void logout() {
+        cacheManager.removeToken(TokenUtil.getContextToken().getToken());
+        cacheManager.removeLiveToken(TokenUtil.getContextToken().getId());
+    }
 }

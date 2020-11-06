@@ -1,17 +1,19 @@
-package com.shenjies88.practice.im.backend.vo.authentication;
+package com.shenjies88.practice.im.backend.vo;
 
-import io.swagger.annotations.ApiModel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author shenjies88
  * @since 2020/11/5-9:55 PM
  */
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
-@ApiModel("登陆返回")
-public class LoginRespVO {
+public class ContextTokenVO {
 
     private Integer id;
     private String account;
