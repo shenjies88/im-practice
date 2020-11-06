@@ -32,20 +32,15 @@ public class MessageService {
     private final NettyClient nettyClient;
 
     /**
-     * 处理 私聊-文本
-     *
-     * @param ctx        管道上下文
-     * @param messageDTO 消息体
-     * @param body       消息体json
+     * 私聊-文本 预检查
      */
-    private void handSingleChatTxt(ChannelHandlerContext ctx, MessageDTO messageDTO, String body) {
+    private Integer singleChatTxtPreCheck(ChannelHandlerContext ctx, MessageDTO messageDTO) {
         //序列化
-        SingleChatTxtDTO singleChatTxtDTO;
+        SingleChatTxtDTO singleChatTxtDTO = null;
         try {
             singleChatTxtDTO = JSON.parseObject(messageDTO.getContentJson(), SingleChatTxtDTO.class);
         } catch (Exception e) {
-            messageManager.writeErrorClose(ctx, "无效的内容类型");
-            return;
+            Assert.isTrue(false, "无效的内容类型");
         }
         //校验
         Assert.hasText(singleChatTxtDTO.getMsg(), "消息内容不能为空");
@@ -53,6 +48,18 @@ public class MessageService {
         Assert.notNull(toMemberId, "目标会员id不能为空");
         Integer myMemberId = MemberChannelCache.get(ctx);
         Assert.isTrue(!toMemberId.equals(myMemberId), "目标会员不能是自己");
+        return toMemberId;
+    }
+
+    /**
+     * 发送私聊消息
+     *
+     * @param ctx        管道上下文
+     * @param messageDTO 消息体
+     * @param body       消息体json
+     * @param toMemberId 接受用户id
+     */
+    private void sendSingleChat(ChannelHandlerContext ctx, MessageDTO messageDTO, String body, Integer toMemberId) {
         //缓存中获取目标会员管道
         ChannelHandlerContext toCtx = MemberChannelCache.get(toMemberId);
         if (toCtx == null) {
@@ -147,8 +154,7 @@ public class MessageService {
         Assert.notNull(MemberChannelCache.get(ctx), "您未登录");
         switch (messageDTO.getContentType()) {
             case TXT:
-                //TODO 预校验，发送使用同一个方法
-                handSingleChatTxt(ctx, messageDTO, body);
+                sendSingleChat(ctx, messageDTO, body, singleChatTxtPreCheck(ctx, messageDTO));
                 break;
             default:
                 messageManager.writeErrorClose(ctx, "无效的内容类型");

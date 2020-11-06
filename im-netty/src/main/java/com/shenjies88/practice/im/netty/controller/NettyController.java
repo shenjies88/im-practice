@@ -1,5 +1,6 @@
 package com.shenjies88.practice.im.netty.controller;
 
+import com.shenjies88.practice.im.common.dto.base.MessageDTO;
 import com.shenjies88.practice.im.common.vo.HttpResultVO;
 import com.shenjies88.practice.im.netty.service.NettyService;
 import io.swagger.annotations.Api;
@@ -7,10 +8,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author shenjies88
@@ -32,5 +30,10 @@ public class NettyController {
         return HttpResultVO.success();
     }
 
-    //TODO 处理私聊消息
+    @ApiOperation("处理私聊消息")
+    @PostMapping("/{id}")
+    public HttpResultVO<Void> handSingleChat(@PathVariable("id") Integer id, @RequestBody MessageDTO prams) {
+        nettyService.handSingleChat(id, prams);
+        return HttpResultVO.success();
+    }
 }
