@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.shenjies88.practice.im.backend.mapper.GroupMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="baseResultMap" type="com.shenjies88.practice.im.backend.entity.GroupDO">
+        <id property="id" jdbcType="INTEGER" column="id"/>
+        <result property="createTime" jdbcType="TIMESTAMP" column="create_time"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="baseColumnList">
+        id,create_time
+    </sql>
+
+    <insert id="insert" parameterType="com.shenjies88.practice.im.backend.entity.GroupDO" useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO group
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            create_time,
+        </trim>
+        <trim prefix=" VALUES (" suffix=")" suffixOverrides=",">
+            #{createTime, jdbcType=TIMESTAMP},
+        </trim>
+    </insert>
+
+</mapper>

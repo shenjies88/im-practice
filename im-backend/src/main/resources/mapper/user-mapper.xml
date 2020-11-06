@@ -24,6 +24,15 @@
         WHERE account = #{account}
     </select>
 
+    <select id="countById" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM user
+        WHERE id IN
+        <foreach collection="memberIdList" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+
     <insert id="insert" parameterType="com.shenjies88.practice.im.backend.entity.UserDO" useGeneratedKeys="true"
             keyProperty="id">
         INSERT INTO user

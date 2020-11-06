@@ -9,8 +9,8 @@ spring:
   cloud:
     zookeeper:
       connect-string: 192.168.56.10:2181
-      sessionTimeout: 5s
-      connectionTimeout: 3s
+      sessionTimeout: 10s
+      connectionTimeout: 5s
       discovery:
         metadata:
           host: 127.0.0.1

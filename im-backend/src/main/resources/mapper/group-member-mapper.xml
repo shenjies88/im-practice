@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.shenjies88.practice.im.backend.mapper.GroupMemberMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="baseResultMap" type="com.shenjies88.practice.im.backend.entity.GroupMemberDO">
+        <id property="groupId" jdbcType="INTEGER" column="group_id"/>
+        <result property="createTime" jdbcType="TIMESTAMP" column="create_time"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="baseColumnList">
+        group_id,member_id,create_time
+    </sql>
+
+    <insert id="insertBatch" parameterType="com.shenjies88.practice.im.backend.entity.GroupMemberDO"
+            useGeneratedKeys="false">
+        INSERT INTO group_member
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            group_id,
+            member_id,
+            create_time,
+        </trim>
+        VALUES
+        <foreach collection="list" item="entity" separator=",">
+            (#{groupId, jdbcType=INTEGER},#{memberId, jdbcType=INTEGER},#{createTime, jdbcType=TIMESTAMP})
+        </foreach>
+    </insert>
+
+</mapper>

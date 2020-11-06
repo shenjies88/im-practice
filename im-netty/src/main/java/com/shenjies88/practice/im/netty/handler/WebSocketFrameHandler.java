@@ -45,7 +45,7 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
             messageManager.writeErrorClose(ctx, "无效的消息格式");
             return;
         }
-        log.info("\n\n------------收到的消息------------");
+        log.info("\n\n------------Webscokt收到的消息------------");
         log.info("\n消息体 {}\n\n", messageDTO);
         switch (messageDTO.getType()) {
             case LOGIN:

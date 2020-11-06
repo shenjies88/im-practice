@@ -117,11 +117,12 @@ public class MessageHandService {
      * @param body       消息体json
      */
     public void handSingleChat(ChannelHandlerContext ctx, MessageDTO messageDTO, String body) {
-        //是已登录
+        //已登录
         Assert.notNull(MemberChannelCache.get(ctx), "您未登录");
         switch (messageDTO.getContentType()) {
             case TXT:
-                sendSingleChat(ctx, messageDTO, body, MsgPreCheckUtil.singleChatTxtPreCheck(ctx, messageDTO));
+                Integer toMemberId = MsgPreCheckUtil.singleChatTxtPreCheck(ctx, messageDTO);
+                sendSingleChat(ctx, messageDTO, body, toMemberId);
                 break;
             default:
                 messageManager.writeErrorClose(ctx, "无效的内容类型");
@@ -136,11 +137,12 @@ public class MessageHandService {
      * @param body       消息体json
      */
     public void handGroupChat(ChannelHandlerContext ctx, MessageDTO messageDTO, String body) {
-        //是已登录
+        //已登录
         Assert.notNull(MemberChannelCache.get(ctx), "您未登录");
         switch (messageDTO.getContentType()) {
             case TXT:
-                sendGroupChat(ctx, messageDTO, body, MsgPreCheckUtil.groupChatTxtPreCheck(messageDTO));
+                Integer groupId = MsgPreCheckUtil.groupChatTxtPreCheck(messageDTO);
+                sendGroupChat(ctx, messageDTO, body, groupId);
                 break;
             default:
                 messageManager.writeErrorClose(ctx, "无效的内容类型");

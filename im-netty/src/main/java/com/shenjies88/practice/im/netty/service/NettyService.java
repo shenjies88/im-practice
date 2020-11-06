@@ -31,6 +31,8 @@ public class NettyService {
     }
 
     public void handSingleChat(Integer id, MessageDTO prams) {
+        log.info("\n\n------------接口收到的消息------------");
+        log.info("\n消息体 {}\n\n", prams);
         //接受消息的管道存在
         ChannelHandlerContext ctx = MemberChannelCache.get(id);
         if (ctx == null) {

@@ -62,6 +62,7 @@ public class AuthenticationService {
         UserDO userDO = userMapper.getByAccount(params.getAccount());
         boolean pass = userDO != null && userDO.getPwd().equals(params.getPwd());
         Assert.isTrue(pass, "账号或密码不匹配");
+        //TODO redis群内上线
         return createContextTokenCache(userDO).getToken();
     }
 
@@ -72,5 +73,6 @@ public class AuthenticationService {
         routerClient.logout(TokenUtil.getContextToken().getId());
         //删除redis登陆信息
         cacheManager.removeUserNettyLogin(TokenUtil.getContextToken().getId());
+        //TODO redis群内下线
     }
 }
