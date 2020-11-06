@@ -1,4 +1,4 @@
-package com.shenjies88.practice.im.backend.vo;
+package com.shenjies88.practice.im.common.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,0 +1,4 @@
+singleServerConfig:
+  address: "redis://192.168.56.10:6379"
+  subscriptionConnectionMinimumIdleSize: 0
+  connectionMinimumIdleSize: 5

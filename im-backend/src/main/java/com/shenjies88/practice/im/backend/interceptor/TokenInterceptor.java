@@ -1,8 +1,8 @@
 package com.shenjies88.practice.im.backend.interceptor;
 
-import com.shenjies88.practice.im.backend.manager.MyCacheManager;
 import com.shenjies88.practice.im.backend.utils.TokenUtil;
-import com.shenjies88.practice.im.backend.vo.ContextTokenVO;
+import com.shenjies88.practice.im.common.bean.manager.MyCacheManager;
+import com.shenjies88.practice.im.common.vo.ContextTokenVO;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

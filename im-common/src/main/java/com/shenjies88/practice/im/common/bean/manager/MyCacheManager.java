@@ -1,13 +1,14 @@
-package com.shenjies88.practice.im.backend.manager;
+package com.shenjies88.practice.im.common.bean.manager;
 
 import com.alibaba.fastjson.JSON;
-import com.shenjies88.practice.im.backend.constant.RedisKeys;
-import com.shenjies88.practice.im.backend.vo.ContextTokenVO;
+import com.shenjies88.practice.im.common.constant.RedisKeys;
+import com.shenjies88.practice.im.common.vo.ContextTokenVO;
 import com.shenjies88.practice.im.common.vo.ServiceMetadataVO;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -96,5 +97,27 @@ public class MyCacheManager {
      */
     public void saveUserNettyLogin(ServiceMetadataVO vo) {
         redisTemplate.opsForHash().putAll(RedisKeys.createUserNettyLogin(vo.getId()), (Map<?, ?>) JSON.toJSON(vo));
+    }
+
+    /**
+     * 删除 用户netty登陆地址
+     *
+     * @param id
+     */
+    public void removeUserNettyLogin(Integer id) {
+        redisTemplate.delete(RedisKeys.createUserNettyLogin(id));
+    }
+
+    /**
+     * 删除 用户netty登陆地址
+     *
+     * @param id
+     */
+    public ServiceMetadataVO getUserNettyLogin(Integer id) {
+        Map<Object, Object> entries = redisTemplate.opsForHash().entries(RedisKeys.createUserNettyLogin(id));
+        if (CollectionUtils.isEmpty(entries)) {
+            return null;
+        }
+        return JSON.parseObject(JSON.toJSONString(entries), ServiceMetadataVO.class);
     }
 }

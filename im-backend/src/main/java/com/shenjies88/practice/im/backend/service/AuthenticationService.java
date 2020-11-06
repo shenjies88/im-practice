@@ -1,12 +1,13 @@
 package com.shenjies88.practice.im.backend.service;
 
+import com.shenjies88.practice.im.backend.client.RouterClient;
 import com.shenjies88.practice.im.backend.entity.UserDO;
-import com.shenjies88.practice.im.backend.manager.MyCacheManager;
 import com.shenjies88.practice.im.backend.mapper.UserMapper;
 import com.shenjies88.practice.im.backend.utils.TokenUtil;
-import com.shenjies88.practice.im.backend.vo.ContextTokenVO;
 import com.shenjies88.practice.im.backend.vo.authentication.LoginReqVO;
 import com.shenjies88.practice.im.backend.vo.authentication.RegReqVO;
+import com.shenjies88.practice.im.common.bean.manager.MyCacheManager;
+import com.shenjies88.practice.im.common.vo.ContextTokenVO;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ public class AuthenticationService {
 
     private final UserMapper userMapper;
     private final MyCacheManager cacheManager;
+    private final RouterClient routerClient;
 
     /**
      * 生成VO并缓存token
@@ -66,5 +68,9 @@ public class AuthenticationService {
     public void logout() {
         cacheManager.removeToken(TokenUtil.getContextToken().getToken());
         cacheManager.removeLiveToken(TokenUtil.getContextToken().getId());
+        //调用router通知netty删除对应管道
+        routerClient.logout(TokenUtil.getContextToken().getId());
+        //删除redis登陆信息
+        cacheManager.removeUserNettyLogin(TokenUtil.getContextToken().getId());
     }
 }

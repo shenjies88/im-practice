@@ -1,8 +1,8 @@
 package com.shenjies88.practice.im.backend.service;
 
 import com.shenjies88.practice.im.backend.client.RouterClient;
-import com.shenjies88.practice.im.backend.manager.MyCacheManager;
 import com.shenjies88.practice.im.backend.utils.TokenUtil;
+import com.shenjies88.practice.im.common.bean.manager.MyCacheManager;
 import com.shenjies88.practice.im.common.vo.ServiceMetadataVO;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

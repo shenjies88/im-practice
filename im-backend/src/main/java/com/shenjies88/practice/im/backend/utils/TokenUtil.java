@@ -1,6 +1,6 @@
 package com.shenjies88.practice.im.backend.utils;
 
-import com.shenjies88.practice.im.backend.vo.ContextTokenVO;
+import com.shenjies88.practice.im.common.vo.ContextTokenVO;
 
 /**
  * @author shenjies88

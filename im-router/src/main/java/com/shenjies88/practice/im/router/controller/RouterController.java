@@ -8,9 +8,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author shenjies88
@@ -29,5 +27,12 @@ public class RouterController {
     @GetMapping
     public HttpResultVO<ServiceMetadataVO> serviceInstance() {
         return HttpResultVO.success(routerService.serviceInstance());
+    }
+
+    @ApiOperation("通知对应的netty服务下线")
+    @DeleteMapping("/{id}")
+    public HttpResultVO<Void> logout(@PathVariable("id") Integer id) {
+        routerService.logout(id);
+        return HttpResultVO.success();
     }
 }
