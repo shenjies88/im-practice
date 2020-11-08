@@ -5,6 +5,7 @@ import com.shenjies88.practice.im.backend.entity.GroupMemberDO;
 import com.shenjies88.practice.im.backend.mapper.GroupMapper;
 import com.shenjies88.practice.im.backend.mapper.GroupMemberMapper;
 import com.shenjies88.practice.im.backend.mapper.UserMapper;
+import com.shenjies88.practice.im.backend.utils.TokenUtil;
 import com.shenjies88.practice.im.common.bean.manager.MyCacheManager;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,5 +52,9 @@ public class GroupService {
         //redis群内上线
         cacheManager.saveGroupOnline(group.getId(), memberIdList);
         return group.getId();
+    }
+
+    public List<Integer> myList() {
+        return groupMemberMapper.findGroupIdByMemberId(TokenUtil.getContextToken().getId());
     }
 }

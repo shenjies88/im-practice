@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
  * @author shenjies88
  * @since 2020/11/6-2:42 PM
@@ -33,5 +35,11 @@ public class GroupController {
         Assert.isTrue(!params.getMemberIdList().contains(TokenUtil.getContextToken().getId()), "不能邀请自己");
         params.getMemberIdList().add(TokenUtil.getContextToken().getId());
         return HttpResultVO.success(groupService.createGroup(params.getMemberIdList()));
+    }
+
+    @ApiOperation("我的群列表")
+    @PostMapping("/my-list")
+    public HttpResultVO<List<Integer>> myList() {
+        return HttpResultVO.success(groupService.myList());
     }
 }
