@@ -17,4 +17,12 @@ public interface GroupMemberMapper {
      * @param list 实体列表
      */
     void insertBatch(@Param("list") List<GroupMemberDO> list);
+
+    /**
+     * 根据会员id查找群id列表
+     *
+     * @param memberId
+     * @return
+     */
+    List<Integer> findGroupIdByMemberId(Integer memberId);
 }

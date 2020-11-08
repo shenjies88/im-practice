@@ -2,6 +2,8 @@ package com.shenjies88.practice.im.backend.service;
 
 import com.shenjies88.practice.im.backend.client.RouterClient;
 import com.shenjies88.practice.im.backend.entity.UserDO;
+import com.shenjies88.practice.im.backend.manager.GroupMemberManager;
+import com.shenjies88.practice.im.backend.mapper.GroupMemberMapper;
 import com.shenjies88.practice.im.backend.mapper.UserMapper;
 import com.shenjies88.practice.im.backend.utils.TokenUtil;
 import com.shenjies88.practice.im.backend.vo.authentication.LoginReqVO;
@@ -25,7 +27,9 @@ import java.util.UUID;
 public class AuthenticationService {
 
     private final UserMapper userMapper;
+    private final GroupMemberMapper groupMemberMapper;
     private final MyCacheManager cacheManager;
+    private final GroupMemberManager groupMemberManager;
     private final RouterClient routerClient;
 
     /**
@@ -62,7 +66,8 @@ public class AuthenticationService {
         UserDO userDO = userMapper.getByAccount(params.getAccount());
         boolean pass = userDO != null && userDO.getPwd().equals(params.getPwd());
         Assert.isTrue(pass, "账号或密码不匹配");
-        //TODO redis群内上线
+        //我在的群上线
+        groupMemberManager.groupOnline(userDO.getId());
         return createContextTokenCache(userDO).getToken();
     }
 
@@ -73,6 +78,7 @@ public class AuthenticationService {
         routerClient.logout(TokenUtil.getContextToken().getId());
         //删除redis登陆信息
         cacheManager.removeUserNettyLogin(TokenUtil.getContextToken().getId());
-        //TODO redis群内下线
+        //我在的群下线
+        groupMemberManager.groupOffline();
     }
 }

@@ -24,8 +24,15 @@
         </trim>
         VALUES
         <foreach collection="list" item="entity" separator=",">
-            (#{groupId, jdbcType=INTEGER},#{memberId, jdbcType=INTEGER},#{createTime, jdbcType=TIMESTAMP})
+            (#{entity.groupId, jdbcType=INTEGER},#{entity.memberId, jdbcType=INTEGER},#{entity.createTime, jdbcType=TIMESTAMP})
         </foreach>
     </insert>
+
+    <select id="findGroupIdByMemberId" resultType="java.lang.Integer">
+        SELECT
+        group_id
+        FROM group_member
+        WHERE member_id = #{memberId}
+    </select>
 
 </mapper>

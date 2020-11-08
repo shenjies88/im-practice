@@ -5,6 +5,7 @@ import com.shenjies88.practice.im.backend.entity.GroupMemberDO;
 import com.shenjies88.practice.im.backend.mapper.GroupMapper;
 import com.shenjies88.practice.im.backend.mapper.GroupMemberMapper;
 import com.shenjies88.practice.im.backend.mapper.UserMapper;
+import com.shenjies88.practice.im.common.bean.manager.MyCacheManager;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,7 @@ public class GroupService {
     private final UserMapper userMapper;
     private final GroupMapper groupMapper;
     private final GroupMemberMapper groupMemberMapper;
+    private final MyCacheManager cacheManager;
 
     private List<GroupMemberDO> createGroupMembers(Integer groupId, Set<Integer> memberIdList) {
         List<GroupMemberDO> result = new ArrayList<>();
@@ -46,7 +48,8 @@ public class GroupService {
         groupMapper.insert(group);
         //插入群成员
         groupMemberMapper.insertBatch(createGroupMembers(group.getId(), memberIdList));
-        //TODO redis群内上线
+        //redis群内上线
+        cacheManager.saveGroupOnline(group.getId(), memberIdList);
         return group.getId();
     }
 }

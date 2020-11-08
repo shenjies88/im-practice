@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -120,4 +121,45 @@ public class MyCacheManager {
         }
         return JSON.parseObject(JSON.toJSONString(entries), ServiceMetadataVO.class);
     }
+
+    /**
+     * 保存 会员群内上线
+     *
+     * @param groupId
+     * @param memberIdList
+     */
+    public void saveGroupOnline(Integer groupId, Set<Integer> memberIdList) {
+        redisTemplate.opsForSet().add(RedisKeys.createGroupOnline(groupId), memberIdList.toArray());
+    }
+
+    /**
+     * 移除 会员群内上线
+     *
+     * @param groupId
+     * @param memberIdList
+     */
+    public void removeGroupOnline(Integer groupId, Set<Integer> memberIdList) {
+        redisTemplate.opsForSet().remove(RedisKeys.createGroupOnline(groupId), memberIdList.toArray());
+    }
+
+    /**
+     * 保存 会员群内下线
+     *
+     * @param groupId
+     * @param memberIdList
+     */
+    public void saveGroupOffline(Integer groupId, Set<Integer> memberIdList) {
+        redisTemplate.opsForSet().add(RedisKeys.createGroupOffline(groupId), memberIdList.toArray());
+    }
+
+    /**
+     * 保存 会员群内下线
+     *
+     * @param groupId
+     * @param memberIdList
+     */
+    public void removeGroupOffline(Integer groupId, Set<Integer> memberIdList) {
+        redisTemplate.opsForSet().remove(RedisKeys.createGroupOffline(groupId), memberIdList.toArray());
+    }
+
 }

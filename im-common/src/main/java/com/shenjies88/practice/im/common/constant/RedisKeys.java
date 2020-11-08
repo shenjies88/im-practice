@@ -43,4 +43,26 @@ public abstract class RedisKeys {
     public static String createUserNettyLogin(Integer id) {
         return USER_NETTY_LOGIN + ":" + id;
     }
+
+    /**
+     * 生成 用户群内上线 key
+     * 格式 im:group:id:online
+     *
+     * @param groupId
+     * @return
+     */
+    public static String createGroupOnline(Integer groupId) {
+        return PREFIX + ":group" + ":" + groupId + ":online";
+    }
+
+    /**
+     * 生成 用户群内下线 key
+     * 格式 im:group:id:offline
+     *
+     * @param groupId
+     * @return
+     */
+    public static String createGroupOffline(Integer groupId) {
+        return PREFIX + ":group" + ":" + groupId + ":offline";
+    }
 }
