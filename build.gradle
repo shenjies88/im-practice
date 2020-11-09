@@ -36,9 +36,9 @@ subprojects {
 	}
 
 	dependencies {
-		compile 'org.springframework.boot:spring-boot-starter-web'
-		compile "com.github.xiaoymin:knife4j-spring-boot-starter:${swaggerVersion}"
-		compile "com.alibaba:fastjson:${fastJsonVersion}"
+		implementation 'org.springframework.boot:spring-boot-starter-web'
+		implementation "com.github.xiaoymin:knife4j-spring-boot-starter:${swaggerVersion}"
+		implementation "com.alibaba:fastjson:${fastJsonVersion}"
 		compileOnly 'org.projectlombok:lombok'
 		annotationProcessor 'org.projectlombok:lombok'
 	}
