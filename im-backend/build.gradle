@@ -3,5 +3,4 @@ dependencies {
     implementation "com.alibaba:fastjson:${fastJsonVersion}"
     implementation "com.github.pagehelper:pagehelper-spring-boot-starter:${pageHelperVersion}"
     runtimeOnly 'mysql:mysql-connector-java'
-    implementation 'org.springframework.boot:spring-boot-starter-webflux'
 }
