@@ -1,12 +1,15 @@
 package com.shenjies88.practice.im.common.bean.client;
 
 import com.shenjies88.practice.im.common.dto.base.MessageDTO;
+import com.shenjies88.practice.im.common.vo.SendGroupChatReqVo;
+import com.shenjies88.practice.im.common.vo.ServiceMetadataVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -50,5 +53,21 @@ public class NettyClient {
 
     public static String createBaseUrl(String host, String port) {
         return "http://" + host + ":" + port;
+    }
+
+    /**
+     * 发送群聊消息
+     */
+    public void sendGroupChat(String baseUrl, List<ServiceMetadataVO> serviceMetadataList, MessageDTO messageDTO, Integer groupId) {
+        SendGroupChatReqVo body = new SendGroupChatReqVo(serviceMetadataList, messageDTO);
+        WebClient.create(baseUrl).post()
+                .uri("/netty/group/" + groupId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Mono.just(body), SendGroupChatReqVo.class)
+                .retrieve()
+                .bodyToMono(Map.class)
+                .doOnError(Exception.class, e ->
+                        log.error("发送私聊消息 异常", e)
+                ).subscribe();
     }
 }

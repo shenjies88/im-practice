@@ -133,6 +133,15 @@ public class MyCacheManager {
     }
 
     /**
+     * 获取 会员群内上线
+     *
+     * @param groupId
+     */
+    public Set<Object> getGroupOnline(Integer groupId) {
+        return redisTemplate.opsForSet().members(RedisKeys.createGroupOnline(groupId));
+    }
+
+    /**
      * 移除 会员群内上线
      *
      * @param groupId

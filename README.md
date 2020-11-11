@@ -33,5 +33,5 @@ docker run --name mysql8 -p 3306:3306 -e MYSQL_ROOT_PASSWORD=password -d mysql:8
 ## TODO
 
 - [X] 私聊
-- [ ] 群聊
+- [x] 群聊
 - [ ] 心跳检测

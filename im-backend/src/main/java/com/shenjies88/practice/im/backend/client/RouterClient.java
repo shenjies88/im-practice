@@ -43,7 +43,7 @@ public class RouterClient {
                 })
                 .block();
         log.info("获取netty服务结果 {}", result);
-        Assert.isTrue(result.getStatus(), "服务器异常，请稍后再试");
+        Assert.isTrue(result.getStatus() && result.getData() != null, "服务器异常，请稍后再试");
         return result.getData();
     }
 

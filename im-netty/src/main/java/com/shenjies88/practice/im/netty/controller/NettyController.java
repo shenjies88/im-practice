@@ -2,6 +2,7 @@ package com.shenjies88.practice.im.netty.controller;
 
 import com.shenjies88.practice.im.common.dto.base.MessageDTO;
 import com.shenjies88.practice.im.common.vo.HttpResultVO;
+import com.shenjies88.practice.im.common.vo.SendGroupChatReqVo;
 import com.shenjies88.practice.im.netty.service.NettyService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -34,6 +35,13 @@ public class NettyController {
     @PostMapping("/{id}")
     public HttpResultVO<Void> handSingleChat(@PathVariable("id") Integer id, @RequestBody MessageDTO prams) {
         nettyService.handSingleChat(id, prams);
+        return HttpResultVO.success();
+    }
+
+    @ApiOperation("处理群聊消息")
+    @PostMapping("/group/{id}")
+    public HttpResultVO<Void> handGroupChat(@PathVariable("id") Integer id, @RequestBody SendGroupChatReqVo prams) {
+        nettyService.handGroupChat(id, prams);
         return HttpResultVO.success();
     }
 }

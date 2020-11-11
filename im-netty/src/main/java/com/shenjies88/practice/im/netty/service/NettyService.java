@@ -2,6 +2,8 @@ package com.shenjies88.practice.im.netty.service;
 
 import com.alibaba.fastjson.JSON;
 import com.shenjies88.practice.im.common.dto.base.MessageDTO;
+import com.shenjies88.practice.im.common.vo.SendGroupChatReqVo;
+import com.shenjies88.practice.im.common.vo.ServiceMetadataVO;
 import com.shenjies88.practice.im.netty.cache.MemberChannelCache;
 import com.shenjies88.practice.im.netty.manager.MyMessageManager;
 import io.netty.channel.ChannelHandlerContext;
@@ -33,12 +35,28 @@ public class NettyService {
     public void handSingleChat(Integer id, MessageDTO prams) {
         log.info("\n\n------------接口收到的消息------------");
         log.info("\n消息体 {}\n\n", prams);
+        log.info("会员id: {}", id);
         //接受消息的管道存在
         ChannelHandlerContext ctx = MemberChannelCache.get(id);
         if (ctx == null) {
-            log.warn("用户 id:{} 不在线", id);
+            log.warn("用户id:{} 不在线", id);
             return;
         }
         messageManager.writeBody(ctx, JSON.toJSONString(prams));
+    }
+
+    public void handGroupChat(Integer id, SendGroupChatReqVo prams) {
+        log.info("\n\n------------接口收到的消息------------");
+        log.info("\n消息体 {}\n\n", prams);
+        log.info("群id: {}", id);
+        String body = JSON.toJSONString(prams.getMessageDTO());
+        for (ServiceMetadataVO e : prams.getServiceMetadataList()) {
+            ChannelHandlerContext ctx = MemberChannelCache.get(e.getId());
+            if (ctx == null) {
+                log.warn("用户id: {} 不在线", e.getId());
+                continue;
+            }
+            messageManager.writeBody(ctx, body);
+        }
     }
 }

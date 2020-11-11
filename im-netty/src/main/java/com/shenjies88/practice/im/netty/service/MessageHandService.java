@@ -3,18 +3,26 @@ package com.shenjies88.practice.im.netty.service;
 import com.alibaba.fastjson.JSON;
 import com.shenjies88.practice.im.common.bean.client.NettyClient;
 import com.shenjies88.practice.im.common.bean.manager.MyCacheManager;
+import com.shenjies88.practice.im.common.dto.GroupChatTxtDTO;
+import com.shenjies88.practice.im.common.dto.SingleChatTxtDTO;
 import com.shenjies88.practice.im.common.dto.base.LoginTypeDTO;
 import com.shenjies88.practice.im.common.dto.base.MessageDTO;
 import com.shenjies88.practice.im.common.vo.ServiceMetadataVO;
 import com.shenjies88.practice.im.netty.cache.MemberChannelCache;
 import com.shenjies88.practice.im.netty.manager.MyMessageManager;
-import com.shenjies88.practice.im.netty.utils.MsgPreCheckUtil;
 import io.netty.channel.ChannelHandlerContext;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
 /**
@@ -22,13 +30,65 @@ import org.springframework.util.Assert;
  * @since 2020/11/04/16:27
  */
 @Slf4j
-@AllArgsConstructor(onConstructor_ = {@Autowired})
 @Service
 public class MessageHandService {
+
+    private final String serverPort;
+    private final String host;
 
     private final MyMessageManager messageManager;
     private final MyCacheManager cacheManager;
     private final NettyClient nettyClient;
+
+    @Autowired
+    public MessageHandService(@Value("${server.port}") String serverPort, @Value("${spring.cloud.zookeeper.discovery.metadata.host}") String host, MyMessageManager messageManager, MyCacheManager cacheManager, NettyClient nettyClient) {
+        this.serverPort = serverPort;
+        this.host = host;
+        this.messageManager = messageManager;
+        this.cacheManager = cacheManager;
+        this.nettyClient = nettyClient;
+    }
+
+    /**
+     * 群聊-文本 预检查
+     */
+    private Integer groupChatTxtPreCheck(MessageDTO messageDTO, Integer memberId) {
+        //序列化
+        GroupChatTxtDTO groupChatTxtDTO = null;
+        try {
+            groupChatTxtDTO = JSON.parseObject(messageDTO.getContentJson(), GroupChatTxtDTO.class);
+        } catch (Exception e) {
+            Assert.isTrue(false, "无效的内容类型");
+        }
+        //校验
+        Assert.hasText(groupChatTxtDTO.getMsg(), "消息内容不能为空");
+        Integer groupId = groupChatTxtDTO.getGroupId();
+        Assert.notNull(groupId, "目标群id不能为空");
+        Set<Object> groupOnline = cacheManager.getGroupOnline(groupId);
+        Assert.isTrue(groupOnline.contains(memberId), "当前用户不在该群内");
+        return groupId;
+    }
+
+    /**
+     * 私聊-文本 预检查
+     */
+    private Integer singleChatTxtPreCheck(ChannelHandlerContext ctx, MessageDTO messageDTO) {
+        //序列化
+        SingleChatTxtDTO singleChatTxtDTO = null;
+        try {
+            singleChatTxtDTO = JSON.parseObject(messageDTO.getContentJson(), SingleChatTxtDTO.class);
+        } catch (Exception e) {
+            Assert.isTrue(false, "无效的内容类型");
+        }
+        //校验
+        Assert.hasText(singleChatTxtDTO.getMsg(), "消息内容不能为空");
+        Integer toMemberId = singleChatTxtDTO.getToMemberId();
+        Assert.notNull(toMemberId, "目标会员id不能为空");
+        Integer myMemberId = MemberChannelCache.get(ctx);
+        Assert.isTrue(!toMemberId.equals(myMemberId), "目标会员不能是自己");
+        return toMemberId;
+    }
+
 
     /**
      * 发送私聊消息
@@ -67,8 +127,37 @@ public class MessageHandService {
      * @param groupId    群id
      */
     private void sendGroupChat(ChannelHandlerContext ctx, MessageDTO messageDTO, String body, Integer groupId) {
-        //TODO 从redis中获取群在线用户信息，不在本实例的用户批量一次http请求发送到另一个实例的接口
-        //TODO 发送给目标群
+        Set<Object> onLineMembers = cacheManager.getGroupOnline(groupId);
+        if (CollectionUtils.isEmpty(onLineMembers)) {
+            log.warn("群: {} 无人在线", groupId);
+            return;
+        }
+        List<ServiceMetadataVO> loginInfos = new ArrayList<>();
+        onLineMembers.forEach(e ->
+                loginInfos.add(cacheManager.getUserNettyLogin((Integer) e))
+        );
+        //根据所登陆的服务器分组，在本服务器的直接循环发送
+        Map<String, List<ServiceMetadataVO>> loginInfoGroup = loginInfos.stream().collect(Collectors.groupingBy(e -> NettyClient.createBaseUrl(e.getHost(), e.getServerPort())));
+        //不在本服务器的一次性批量异步请求
+        String currServer = NettyClient.createBaseUrl(host, serverPort);
+        loginInfoGroup.forEach((url, serviceMetadataList) -> {
+            if (currServer.equals(url)) {
+                //本地循环
+                log.info("本地群用户数量 {}", serviceMetadataList.size());
+                serviceMetadataList.forEach(metadata -> {
+                    ChannelHandlerContext c = MemberChannelCache.get(metadata.getId());
+                    if (c == null) {
+                        log.warn("群用户不在线 {}", metadata);
+                    } else {
+                        messageManager.writeBody(c, body);
+                    }
+                });
+            } else {
+                //异步请求
+                log.info("服务器 {} 群用户数量 {}", url, serviceMetadataList.size());
+                nettyClient.sendGroupChat(url, serviceMetadataList, messageDTO, groupId);
+            }
+        });
         messageManager.writeSuccessful(ctx);
     }
 
@@ -121,7 +210,7 @@ public class MessageHandService {
         Assert.notNull(MemberChannelCache.get(ctx), "您未登录");
         switch (messageDTO.getContentType()) {
             case TXT:
-                Integer toMemberId = MsgPreCheckUtil.singleChatTxtPreCheck(ctx, messageDTO);
+                Integer toMemberId = singleChatTxtPreCheck(ctx, messageDTO);
                 sendSingleChat(ctx, messageDTO, body, toMemberId);
                 break;
             default:
@@ -141,7 +230,7 @@ public class MessageHandService {
         Assert.notNull(MemberChannelCache.get(ctx), "您未登录");
         switch (messageDTO.getContentType()) {
             case TXT:
-                Integer groupId = MsgPreCheckUtil.groupChatTxtPreCheck(messageDTO);
+                Integer groupId = groupChatTxtPreCheck(messageDTO, MemberChannelCache.get(ctx));
                 sendGroupChat(ctx, messageDTO, body, groupId);
                 break;
             default:
