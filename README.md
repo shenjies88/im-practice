@@ -43,7 +43,12 @@ docker run --name mysql8 -p 3306:3306 -e MYSQL_ROOT_PASSWORD=password -d mysql:8
 ### 私聊
 
 ```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
 <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
 <div class="mermaid">
 graph TD;
 	注册 --> 登陆;
@@ -52,19 +57,28 @@ graph TD;
 	链接WebSocket --> 发送登陆JSON;
 	发送登陆JSON --> 发送私聊JSON;
 </div>
+</body>
+</html>
 ```
 
 ### 群聊
 
 ```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
 <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
 <div class="mermaid">
 graph TD;
 	注册 --> 登陆;
 	登陆 --> 获取netty服务地址;
 	获取netty服务地址 --> 链接WebSocket;
 	链接WebSocket --> 发送登陆JSON;
-	发送登陆JSON --> 发送群聊JSON;
+	发送登陆JSON --> 发送私聊JSON;
 </div>
+</body>
+</html>
 ```
 
