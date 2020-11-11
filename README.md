@@ -38,6 +38,7 @@ docker run --name mysql8 -p 3306:3306 -e MYSQL_ROOT_PASSWORD=password -d mysql:8
 
 ## 一个完整的流程
 
+- 注意修改各模块链接中间件地址，`netty`模块注册自身地址
 - `WebSocket path /my-im`
 - 请使用[Typora查看流程图](https://typora.io/)
 
