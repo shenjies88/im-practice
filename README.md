@@ -42,7 +42,7 @@ docker run --name mysql8 -p 3306:3306 -e MYSQL_ROOT_PASSWORD=password -d mysql:8
 
 ### 私聊
 
-```javascript
+```html
 <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
 <div class="mermaid">
 graph TD;
@@ -56,7 +56,7 @@ graph TD;
 
 ### 群聊
 
-```javascript
+```html
 <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
 <div class="mermaid">
 graph TD;
