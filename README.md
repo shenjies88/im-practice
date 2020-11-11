@@ -35,3 +35,30 @@ docker run --name mysql8 -p 3306:3306 -e MYSQL_ROOT_PASSWORD=password -d mysql:8
 - [X] 私聊
 - [x] 群聊
 - [ ] 心跳检测
+
+## 一个完整的流程
+
+- `WebSocket path /my-im`
+
+### 私聊
+
+```mermaid
+graph TD
+注册 --> 登陆
+登陆 --> 获取netty服务地址
+获取netty服务地址 --> 链接WebSocket
+链接WebSocket --> 发送登陆JSON
+发送登陆JSON --> 发送私聊JSON
+```
+
+### 群聊
+
+```mermaid
+graph TD
+注册 --> 登陆
+登陆 --> 获取netty服务地址
+获取netty服务地址 --> 链接WebSocket
+链接WebSocket --> 发送登陆JSON
+发送登陆JSON --> 发送群聊JSON
+```
+
