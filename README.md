@@ -39,46 +39,27 @@ docker run --name mysql8 -p 3306:3306 -e MYSQL_ROOT_PASSWORD=password -d mysql:8
 ## 一个完整的流程
 
 - `WebSocket path /my-im`
+- 请使用[Typora查看流程图](https://typora.io/)
 
 ### 私聊
 
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
-</head>
-<body>
-<div class="mermaid">
-graph TD;
-	注册 --> 登陆;
-	登陆 --> 获取netty服务地址;
-	获取netty服务地址 --> 链接WebSocket;
-	链接WebSocket --> 发送登陆JSON;
-	发送登陆JSON --> 发送私聊JSON;
-</div>
-</body>
-</html>
+```mermaid
+graph TD
+注册 --> 登陆
+登陆 --> 获取netty服务地址
+获取netty服务地址 --> 链接WebSocket
+链接WebSocket --> 发送登陆JSON
+发送登陆JSON --> 发送私聊JSON
 ```
 
 ### 群聊
 
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
-</head>
-<body>
-<div class="mermaid">
-graph TD;
-	注册 --> 登陆;
-	登陆 --> 获取netty服务地址;
-	获取netty服务地址 --> 链接WebSocket;
-	链接WebSocket --> 发送登陆JSON;
-	发送登陆JSON --> 发送私聊JSON;
-</div>
-</body>
-</html>
+```mermaid
+graph TD
+注册 --> 登陆
+登陆 --> 获取netty服务地址
+获取netty服务地址 --> 链接WebSocket
+链接WebSocket --> 发送登陆JSON
+发送登陆JSON --> 发送私聊JSON
 ```
 
